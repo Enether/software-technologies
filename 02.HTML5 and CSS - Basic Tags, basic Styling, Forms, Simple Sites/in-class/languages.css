@@ -1,0 +1,12 @@
+.lang{
+    background: sandybrown;
+    font-style: oblique;
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+}
+
+* {
+    background: lightyellow;
+    font-size: 40px;
+}
