@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Article
 {
+    const MAX_ARTICLE_SUMMARY_LENGTH = 250;
     /**
      * @var int
      *
@@ -206,7 +207,14 @@ class Article
      */
     public function setSummary(string $summary)
     {
-        $this->summary = substr($this->getContent(), 0, strlen($this->getContent()) / 2) . "...";
+        $article_content = $this->getContent();
+        // get the first 250 characters for a summary
+        $this->summary = substr($this->getContent(), 0, self::MAX_ARTICLE_SUMMARY_LENGTH);
+        // attach dots to the end only if the given summary is max length (the original content is more)
+        if (strlen($this->summary) == self::MAX_ARTICLE_SUMMARY_LENGTH)
+        {
+            $this->summary .= "...";
+        }
     }
 
     /**
