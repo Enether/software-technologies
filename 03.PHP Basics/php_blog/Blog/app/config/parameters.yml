@@ -10,3 +10,4 @@ parameters:
     mailer_user: null
     mailer_password: null
     secret: 8893fbc4275e4b02f8c7d77337d7fd8b4f7d3063
+    SoftUniBlogBundle.available_article_categories: ['business', 'sport', 'health', 'technology']

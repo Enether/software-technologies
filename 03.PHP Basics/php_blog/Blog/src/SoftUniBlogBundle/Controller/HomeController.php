@@ -32,4 +32,28 @@ class HomeController extends Controller
             "articles" => $articles
         ]);
     }
+
+    /**
+     * @Route("/articles/{category}")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function indexArticlesByCategoryAction($category)
+    {
+        if (!in_array($category, $this->getParameter('SoftUniBlogBundle.available_article_categories')))
+        {
+            return $this->render('blog/index.html.twig', ["error" => true,"error_message" => "No category named " . $category . " exists!"]);
+        }
+        $articleRepository
+            = $this->getDoctrine()->getRepository(
+            Article::class
+        );
+        // get the articles from the DB
+        /**
+         * @var $articles Article[]
+         */
+        $articles = $articleRepository->findBy(array("category" => $category));
+        return $this->render('blog/index.html.twig',[
+            "articles" => $articles
+        ]);
+    }
 }

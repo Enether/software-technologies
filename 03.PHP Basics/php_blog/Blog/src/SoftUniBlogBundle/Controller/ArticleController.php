@@ -13,17 +13,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\DateTime;
 
+
 class ArticleController extends Controller
 {
-//    /**
-//     * @Route("/create_article", name="create_article")
-//     * @Method("GET")
-//     */
-//    public function showCreateArticlePage()
-//    {
-//        return $this->render('article/create.html.twig');
-//    }
-
     /**
      * @Route("/create_article", name="create_article")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
@@ -52,9 +44,10 @@ class ArticleController extends Controller
             return $this->redirectToRoute('blog_index');
         }
 
+        $available_article_categories = $this->getParameter('SoftUniBlogBundle.available_article_categories');
         return $this->render(
             'article/create.html.twig',
-            array('form' => $form->createView(),"select_options" => ['War', 'Peace'])
+            array('form' => $form->createView(),"select_options" => $available_article_categories)
         );
     }
 
@@ -84,4 +77,6 @@ class ArticleController extends Controller
             "article" => $article,
         ]);
     }
+
+
 }
