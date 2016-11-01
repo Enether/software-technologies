@@ -54,7 +54,7 @@ class ArticleController extends Controller
 
         return $this->render(
             'article/create.html.twig',
-            array('form' => $form->createView())
+            array('form' => $form->createView(),"select_options" => ['War', 'Peace'])
         );
     }
 
@@ -81,7 +81,7 @@ class ArticleController extends Controller
             ]);
         }
         return $this->render('article/show.html.twig',[
-            "article" => $article
+            "article" => $article,
         ]);
     }
 }

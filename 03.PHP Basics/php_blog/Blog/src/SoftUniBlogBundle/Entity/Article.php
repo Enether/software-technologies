@@ -61,6 +61,13 @@ class Article
      */
     private $creationDate;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="category", type="string")
+     */
+    private $category;
+
 
     public function __construct()
     {
@@ -201,6 +208,27 @@ class Article
     {
         $this->summary = substr($this->getContent(), 0, strlen($this->getContent()) / 2) . "...";
     }
+
+    /**
+     * @return string
+     */
+    public function getCategory(): string
+    {
+        if ($this->category === null) {
+            $this->setCategory('temporary category which will be substituted once the form is submitted, because the category option is required.');
+        }
+
+        return $this->category;
+    }
+
+    /**
+     * @param string $category
+     */
+    public function setCategory(string $category)
+    {
+        $this->category = $category;
+    }
+
 
 }
 
