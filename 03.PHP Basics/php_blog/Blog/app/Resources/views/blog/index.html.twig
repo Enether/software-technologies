@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    <div class="container body-content">
+        <div class="row">
+            {% for article in articles %}
+            <div class="col-md-6">
+                <article>
+                    <header>
+                        <h2>
+                            {{ article.title }}
+                        </h2>
+                        <p>
+                            {{ article.content }}
+                        </p>
+
+                        <small class="author">
+                            {{ article.author.getFullName() }}
+                        </small>
+
+                        <footer>
+                            <div class="pull-right">
+                                <a class="btn btn-default btn-xs"
+                                   href="{{ path('article_show',
+                                    {'id': article.id}) }}">Read More</a>
+                            </div>
+                        </footer>
+                    </header>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

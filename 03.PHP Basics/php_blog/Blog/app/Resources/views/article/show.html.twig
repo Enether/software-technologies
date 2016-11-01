@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    <div class="container body-content">
+        <div class="row">
+            <div class="col-md-12">
+                <article>
+                    <header>
+                        <h2>
+                            {{ article.title }}
+                        </h2>
+                        <p>
+                            {{ article.content }}
+                        </p>
+
+                        <small class="author">
+                            {{ article.author.getFullName() }}
+                        </small>
+
+                        <footer>
+                            <div class="pull-right">
+                                <a class="btn btn-default btn-xs" href="#">Back</a>
+                            </div>
+                        </footer>
+                    </header>
+                </article>
+            </div>
+        </div>
+    </div>
+{% endblock %}

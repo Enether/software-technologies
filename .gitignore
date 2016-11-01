@@ -266,8 +266,69 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+# PHP
+# Cache and logs (Symfony2)
+/app/cache/*
+/app/logs/*
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+
+# Email spool folder
+/app/spool/*
+
+# Cache, session files and logs (Symfony3)
+/var/cache/*
+*/var/logs/*
+*/var/sessions/*
+!var/cache/.gitkeep
+!var/logs/.gitkeep
+!var/sessions/.gitkeep
+
+# Parameters
+/app/config/parameters.yml
+/app/config/parameters.ini
+
+# Managed by Composer
+/app/bootstrap.php.cache
+/var/bootstrap.php.cache
+/bin/*
+!bin/console
+!bin/symfony_requirements
+/vendor/
+
+# Assets and user uploads
+/web/bundles/
+/web/uploads/
+
+# Assets managed by Bower
+/web/assets/vendor/
+
+# PHPUnit
+/app/phpunit.xml
+/phpunit.xml
+
+# Build data
+/build/
+
+# Composer PHAR
+/composer.phar
+
+# Backup entities generated with doctrine:generate:entities command
+*/Entity/*~
 *.csproj
 *.config
 02.Data Types and Variables/Class/CenturiesToMinutes/08.Refactor Volume of Pyramid/Properties/AssemblyInfo.cs
 02.Data Types and Variables/Class/CenturiesToMinutes/09.Refactor Special Numbers/Properties/AssemblyInfo.cs
 07.Files, Directories and Exceptions/neth_Homework.zip
+03.PHP Basics/php_blog/php/
+03.PHP Basics/php_blog/mysql/data/phpmyadmin/pma__export_templates.ibd
+03.PHP Basics/php_blog/mysql/data/phpmyadmin/pma__favorite.frm
+03.PHP Basics/php_blog/mysql/data/phpmyadmin/pma__export_templates.frm
+03.PHP Basics/php_blog/mysql/data/phpmyadmin/pma__column_info.ibd
+03.PHP Basics/php_blog/mysql/
+03.PHP Basics/php_blog/HeidiSQL_9.4_Portable/
+03.PHP Basics/php_blog/mysql_start.bat
+03.PHP Basics/php_blog/mysql_stop.bat
+03.PHP Basics/php_blog/Blog/vendor/
+03.PHP Basics/php_blog/Blog/var/cache/
+03.PHP Basics/php_blog/Blog/var/sessions/
