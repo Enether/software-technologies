@@ -31,7 +31,7 @@
                         <div class="col-sm-4">
                             <select class="form-control" id="category_select" name="article[category]" required>
                                 {% for option in select_options %}
-                                    <option value={{ option }}>{{ option }}</option>
+                                    <option value={{ option }}>{{ option|capitalize }}</option>
                                 {% endfor %}
                             </select>
                         </div>

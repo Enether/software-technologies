@@ -1,4 +1,9 @@
 services:
+    app.twig_extension:
+            class: SoftUniBlogBundle\Twig\AppExtension
+            public: false
+            tags:
+                - { name: twig.extension }
     # First we define some basic services to make these utilities available in
     # the entire application
 #    slugger:
