@@ -74,6 +74,12 @@ class ArticleController extends Controller
          */
         $article = $articleRepo->find($id);
 
+        if ($article === null)
+        {
+            return $this->render('article/show.html.twig', [
+                "error" => true
+            ]);
+        }
         return $this->render('article/show.html.twig',[
             "article" => $article
         ]);

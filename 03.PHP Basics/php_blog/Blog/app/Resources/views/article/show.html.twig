@@ -8,14 +8,14 @@
                 <article>
                     <header>
                         <h2>
-                            {{ article.title }}
+                            {{ article.title | default('') }}
                         </h2>
                         <p>
-                            {{ article.content }}
+                            {{ article.content | default('') }}
                         </p>
 
                         <small class="author">
-                            {{ article.author.getFullName() }}
+                            {{ article.author.getFullName() | default('') }}
                         </small>
 
                         <footer>
@@ -25,6 +25,12 @@
                         </footer>
                     </header>
                 </article>
+
+                {% if (error|default(false)) %}
+                    <div class="alert alert-danger">
+                        <strong>No such article!</strong>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
