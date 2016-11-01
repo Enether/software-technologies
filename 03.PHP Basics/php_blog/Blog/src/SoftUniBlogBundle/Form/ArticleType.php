@@ -22,4 +22,9 @@ class ArticleType extends AbstractType
             'data_class' => 'SoftUniBlogBundle\Entity\Article',
         ));
     }
+
+    public function getName()
+    {
+        return 'soft_uni_blog_bundle_article_type';
+    }
 }

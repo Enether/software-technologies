@@ -51,6 +51,10 @@ class User implements UserInterface
      */
     private $articles;
 
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -187,10 +191,14 @@ class User implements UserInterface
 
     /**
      * @param mixed $articles
+     *
+     * @return User
      */
-    public function setArticles($articles)
+    public function addPost($articles)
     {
-        $this->articles = $articles;
+        $this->articles[] = $articles;
+
+        return $this;
     }
 
     /**
