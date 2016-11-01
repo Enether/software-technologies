@@ -36,6 +36,11 @@ class Article
     private $content;
 
     /**
+     * @var string
+     */
+    private $summary;
+
+    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="SoftUniBlogBundle\Entity\User", inversedBy="id")
@@ -56,6 +61,11 @@ class Article
      */
     private $creationDate;
 
+
+    public function __construct()
+    {
+        $this->creationDate = new \DateTime('now');
+    }
 
     /**
      * Get id
@@ -169,6 +179,27 @@ class Article
     public function setAuthorId($authorId)
     {
         $this->authorId = $authorId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSummary(): string
+    {
+        if ($this->summary === null)
+        {
+            $this->setSummary('');
+        }
+
+        return $this->summary;
+    }
+
+    /**
+     * @param string $summary
+     */
+    public function setSummary(string $summary)
+    {
+        $this->summary = substr($this->getContent(), 0, strlen($this->getContent()) / 2) . "...";
     }
 
 }
