@@ -4,7 +4,7 @@
 
     <div class="container body-content">
         <div class="row">
-            {% for article in articles %}
+            {% for article in articles|default([]) %}
             <div class="col-md-6">
                 <article>
                     <header>
@@ -30,6 +30,11 @@
                 </article>
             </div>
             {% endfor %}
+            {% if (error|default(false)) %}
+                <div class="alert alert-danger">
+                    <strong>{{ error_message }}</strong>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
