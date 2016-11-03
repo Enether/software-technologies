@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'article_edit' %}
+
+{% block main %}
+    <div class="container body-content span=8 offset=2" xmlns="http://www.w3.org/1999/html"
+         xmlns="http://www.w3.org/1999/html">
+        <div class="well">
+            <form class="form-horizontal" action="{{ path('article_edit', {'id': article.id })}}" method="post">
+                <fieldset>
+                    <legend>Edit an Article</legend>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="article_title">Title</label>
+                        <div class="col-sm-4 ">
+                            <input class="form-control" id="article_title" placeholder="Your Article's Title" name="article[title]" readonly disabled value={{ article.title }} type="text">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="article_content">Content</label>
+                        <div class="col-sm-4 ">
+                            <textarea
+                                    class="form-control"
+                                    id="article_content"
+                                    name="article[content]" required>
+                                {{ article.content }}
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="category_select">Category</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="category_select"disabled>
+                                {% for option in select_options %}
+                                    <option value={{ option }}>{{ option|capitalize }}</option>
+                                {% endfor %}
+                            </select>
+                            <input id="real_category_select" name="article[category]" value={{ article.category }} hidden>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <a class="btn btn-default" href="{{ path('blog_index') }}">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </div>
+
+                   {{  form_row(form._token) }}
+                </fieldset>
+            </form>
+        </div>
+    </div>
+{% endblock %}

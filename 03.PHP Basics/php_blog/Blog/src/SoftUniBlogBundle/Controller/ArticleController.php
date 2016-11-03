@@ -67,6 +67,7 @@ class ArticleController extends Controller
          */
         $article = $articleRepo->find($id);
 
+
         if ($article === null)
         {
             return $this->render('article/show.html.twig', [
@@ -76,6 +77,54 @@ class ArticleController extends Controller
         return $this->render('article/show.html.twig',[
             "article" => $article,
         ]);
+    }
+
+    /**
+     * @Route("/article/{id}/edit", name="article_edit")
+     * @param Request $request
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function editArticle(Request $request, $id)
+    {
+        $articleRepo =$this->getDoctrine()->getRepository(
+            Article::class
+        );
+        // get the article from the db
+        $originalArticle = $articleRepo->find($id);  /** @var $originalArticle Article */
+        $wannaBeArticle = clone $originalArticle; /** @var $wannaBeArticle Article */
+
+        if ($originalArticle === null)
+        {
+            return $this->render('article/show.html.twig', [
+                "error" => true
+            ]);
+        }
+
+        // paste the form to the wannaBeArticle
+        $form= $this->createForm(ArticleType::class, $wannaBeArticle);
+        // 2) handle the submit request (POST)
+        $form->handleRequest($request);
+
+
+        $available_article_categories = $this->getParameter('SoftUniBlogBundle.available_article_categories');
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            // save the article
+
+            // only editing the content is allowed
+            $originalArticle->setContent($wannaBeArticle->getContent());
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($originalArticle);
+            $em->flush();
+
+            return $this->redirectToRoute('article_show', array('id' => $originalArticle->getId()));
+        }
+
+        return $this->render('article/edit.html.twig',
+            ["form" => $form->createView(), "article" => $originalArticle, "select_options" => $available_article_categories]);
     }
 
 
