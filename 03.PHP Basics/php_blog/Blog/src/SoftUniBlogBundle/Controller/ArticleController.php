@@ -93,7 +93,8 @@ class ArticleController extends Controller
         // get the article from the db
         $originalArticle = $articleRepo->find($id);  /** @var $originalArticle Article */
 
-        if ($originalArticle === null || !$originalArticle->isAuthor($this->getUser()))
+        if ($originalArticle === null ||
+            (!$this->getUser()->isAdmin() && !$originalArticle->isAuthor($this->getUser())))  // if he's not an admin and not the author
         {
             return $this->render('article/show.html.twig', [
                 "error" => true
@@ -139,7 +140,8 @@ class ArticleController extends Controller
     {
         $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
 
-        if ($article === null || !$article->isAuthor($this->getUser()))
+        if ($article === null ||
+            (!$this->getUser()->isAdmin() && !$article->isAuthor($this->getUser())))  // if he's not an admin and not the author
         {
             return $this->render('article/show.html.twig', [
                 "error" => true

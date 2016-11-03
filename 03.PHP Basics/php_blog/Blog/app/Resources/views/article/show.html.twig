@@ -21,7 +21,7 @@
                         <footer>
                             <div class="pull-right">
                                 {% if (not error | default(false)) %}
-                                    {% if article.isAuthor(app.user) %}
+                                    {% if article.isAuthor(app.user) or app.user.isAdmin()%}
                                         <a class="btn btn-danger" href={{ path('article_delete', {'id': article.id}) | default('#') }}>Delete</a>
                                         <a class="btn btn-primary" href={{ path('article_edit', {'id': article.id}) | default('#') }}>Edit</a>
                                     {% endif %}

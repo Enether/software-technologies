@@ -5,6 +5,7 @@ namespace SoftUniBlogBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use SoftUniBlogBundle\Entity\Role;
 use SoftUniBlogBundle\Entity\User;
 use SoftUniBlogBundle\Form\UserType;
 use SoftUniBlogBundle\Repository\UserRepository;
@@ -33,6 +34,11 @@ class UserController extends Controller
             $password = $this->get('security.password_encoder')
                 ->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
+
+            // add the user role to the User
+            $roleRespository = $this->getDoctrine()->getRepository(Role::class);
+            $userRole = $roleRespository->findOneBy(array('name' => 'User'));
+            $user->addRole($userRole);
 
             // 4) save the User!
             $em = $this->getDoctrine()->getManager();
