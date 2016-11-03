@@ -4,6 +4,14 @@
 
     <div class="container body-content">
         <div class="row">
+            <div class="form-group">
+                <form id="sortBox" method="get" action={{ path('blog_index') }}>
+                    <select class="form-control" name="sort_by" id="selectSort" onchange="this.form.submit();">
+                        <option value="oldest" {% if selectedSort == 'oldest' %}selected{% endif %}>Oldest</option>
+                        <option value="newest" {% if selectedSort == 'newest' %}selected{% endif %}>Newest</option>
+                    </select>
+                </form>
+            </div>
             {% for article in articles|default([]) %}
             <div class="col-md-6">
                 <article>

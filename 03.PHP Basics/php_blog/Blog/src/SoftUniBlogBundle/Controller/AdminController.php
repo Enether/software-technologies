@@ -34,8 +34,6 @@ class AdminController extends Controller
      */
     public function deleteUserAction($id)
     {
-
-
         // ...you heartless bastard...
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $id]);
         if ($this->getUser() === null or !$this->getUser()->isAdmin() or !$user)
