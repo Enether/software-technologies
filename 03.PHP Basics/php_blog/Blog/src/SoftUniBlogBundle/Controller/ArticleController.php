@@ -127,5 +127,28 @@ class ArticleController extends Controller
             ["form" => $form->createView(), "article" => $originalArticle, "select_options" => $available_article_categories]);
     }
 
+    /**
+     * @Route("/article/{id}/delete", name="article_delete")
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteArticle($id)
+    {
+        $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
+
+        if ($article === null)
+        {
+            return $this->render('article/show.html.twig', [
+                "error" => true
+            ]);
+        }
+
+        // delete the article from the DB
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($article);
+        $em->flush();
+
+        return $this->redirectToRoute('blog_index');
+    }
 
 }
