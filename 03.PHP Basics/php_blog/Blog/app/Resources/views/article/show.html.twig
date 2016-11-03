@@ -21,8 +21,10 @@
                         <footer>
                             <div class="pull-right">
                                 {% if (not error | default(false)) %}
-                                    <a class="btn btn-danger" href={{ path('article_delete', {'id': article.id}) | default('#') }}>Delete</a>
-                                    <a class="btn btn-primary" href={{ path('article_edit', {'id': article.id}) | default('#') }}>Edit</a>
+                                    {% if article.isAuthor(app.user) %}
+                                        <a class="btn btn-danger" href={{ path('article_delete', {'id': article.id}) | default('#') }}>Delete</a>
+                                        <a class="btn btn-primary" href={{ path('article_edit', {'id': article.id}) | default('#') }}>Edit</a>
+                                    {% endif %}
                                     <a class="btn btn-default btn-xs" href="#">Back</a>
                                 {% endif %}
                             </div>

@@ -174,6 +174,15 @@ class Article
     }
 
     /**
+     * @param $authorCandidate User
+     * @return bool
+     */
+    public function isAuthor($authorCandidate)
+    {
+        return $this->author->getId() === $authorCandidate->getId();
+    }
+
+    /**
      * @return mixed
      */
     public function getAuthorId()

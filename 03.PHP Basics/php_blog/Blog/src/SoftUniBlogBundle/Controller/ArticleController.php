@@ -93,7 +93,7 @@ class ArticleController extends Controller
         // get the article from the db
         $originalArticle = $articleRepo->find($id);  /** @var $originalArticle Article */
 
-        if ($originalArticle === null)
+        if ($originalArticle === null || !$originalArticle->isAuthor($this->getUser()))
         {
             return $this->render('article/show.html.twig', [
                 "error" => true
