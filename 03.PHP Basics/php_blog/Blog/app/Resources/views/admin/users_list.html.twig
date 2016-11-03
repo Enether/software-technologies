@@ -4,6 +4,11 @@
 
     <div class="container body-content">
         <div class="row">
+            {% if (message|default(false)) %}
+                <div class="alert alert-success">
+                    <strong>{{ success_message }}</strong>
+                </div>
+            {% endif %}
             {% for user in users|default([]) %}
                 <div class="col-md-6">
                     <article>
@@ -20,6 +25,7 @@
                                     {{ role }}
                                 {% endfor %}
                             </p>
+                            <a class="btn btn-danger btn-xs" href={{ path('user_delete', {'id': user.id})}}>Delete</a>
                         </header>
                     </article>
                 </div>
