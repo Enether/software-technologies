@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    <div class="container body-content">
+        <div class="row">
+            {% for user in users|default([]) %}
+                <div class="col-md-6">
+                    <article>
+                        <header>
+                            <h2>
+                                {{ user.email }}
+                            </h2>
+                            <p>
+                                {{ user.fullName }}
+                            </p>
+                            <p>
+                                Role(s):
+                                {% for role in user.roles %}
+                                    {{ role }}
+                                {% endfor %}
+                            </p>
+                        </header>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
