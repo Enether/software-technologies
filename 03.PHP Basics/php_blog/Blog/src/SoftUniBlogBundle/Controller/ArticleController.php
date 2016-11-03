@@ -92,7 +92,6 @@ class ArticleController extends Controller
         );
         // get the article from the db
         $originalArticle = $articleRepo->find($id);  /** @var $originalArticle Article */
-        $wannaBeArticle = clone $originalArticle; /** @var $wannaBeArticle Article */
 
         if ($originalArticle === null)
         {
@@ -100,6 +99,10 @@ class ArticleController extends Controller
                 "error" => true
             ]);
         }
+
+        $wannaBeArticle = clone $originalArticle; /** @var $wannaBeArticle Article */
+
+
 
         // paste the form to the wannaBeArticle
         $form= $this->createForm(ArticleType::class, $wannaBeArticle);
