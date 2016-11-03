@@ -2,17 +2,12 @@
 
 namespace SoftUniBlogBundle\Controller;
 
-use Doctrine\ORM\Mapping\Cache;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use SoftUniBlogBundle\Entity\Article;
 use SoftUniBlogBundle\Form\ArticleType;
-use SoftUniBlogBundle\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\DateTime;
-
 
 class ArticleController extends Controller
 {
@@ -71,7 +66,8 @@ class ArticleController extends Controller
         if ($article === null)
         {
             return $this->render('article/show.html.twig', [
-                "error" => true
+                "error" => true,
+                "error_message" => $this->getParameter('SoftUniBlogBundle.invalid_article_message')
             ]);
         }
         return $this->render('article/show.html.twig',[
@@ -93,32 +89,34 @@ class ArticleController extends Controller
         // get the article from the db
         $originalArticle = $articleRepo->find($id);  /** @var $originalArticle Article */
 
-        if ($originalArticle === null ||
-            (!$this->getUser()->isAdmin() && !$originalArticle->isAuthor($this->getUser())))  // if he's not an admin and not the author
+        if ($originalArticle === null)
         {
             return $this->render('article/show.html.twig', [
-                "error" => true
+                "error" => true,
+                "error_message" => $this->getParameter('SoftUniBlogBundle.invalid_article_message')
+            ]);
+        }
+        else if (!$this->getUser()->isAdmin() && !$originalArticle->isAuthor($this->getUser()))  // if he's not an admin and not the author
+        {
+            return $this->render('article/show.html.twig', [
+                "error" => true,
+                "error_message" => $this->getParameter('SoftUniBlogBundle.invalid_edit_permission_message')
             ]);
         }
 
-        $wannaBeArticle = clone $originalArticle; /** @var $wannaBeArticle Article */
-
-
-
-        // paste the form to the wannaBeArticle
-        $form= $this->createForm(ArticleType::class, $wannaBeArticle);
+        $candidateArticle = clone $originalArticle; /** @var $candidateArticle Article */
+        // paste the form to the candidateArticle
+        $form= $this->createForm(ArticleType::class, $candidateArticle);
         // 2) handle the submit request (POST)
         $form->handleRequest($request);
 
-
-        $available_article_categories = $this->getParameter('SoftUniBlogBundle.available_article_categories');
 
         if ($form->isSubmitted() && $form->isValid())
         {
             // save the article
 
             // only editing the content is allowed
-            $originalArticle->setContent($wannaBeArticle->getContent());
+            $originalArticle->setContent($candidateArticle->getContent());
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($originalArticle);
@@ -127,12 +125,16 @@ class ArticleController extends Controller
             return $this->redirectToRoute('article_show', array('id' => $originalArticle->getId()));
         }
 
-        return $this->render('article/edit.html.twig',
-            ["form" => $form->createView(), "article" => $originalArticle, "select_options" => $available_article_categories]);
+        return $this->render('article/edit.html.twig', [
+            "form" => $form->createView(),
+            "article" => $originalArticle,
+            "select_options" => $this->getParameter('SoftUniBlogBundle.available_article_categories')
+        ]);
     }
 
     /**
      * @Route("/article/{id}/delete", name="article_delete")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -140,11 +142,18 @@ class ArticleController extends Controller
     {
         $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
 
-        if ($article === null ||
-            (!$this->getUser()->isAdmin() && !$article->isAuthor($this->getUser())))  // if he's not an admin and not the author
+        if ($article === null)
         {
             return $this->render('article/show.html.twig', [
-                "error" => true
+                "error" => true,
+                "error_message" => $this->getParameter('SoftUniBlogBundle.invalid_article_message')
+            ]);
+        }
+        else if (!$this->getUser()->isAdmin() && !$article->isAuthor($this->getUser()))  // if he's not an admin and not the author
+        {
+            return $this->render('article/show.html.twig', [
+                "error" => true,
+                "error_message" => $this->getParameter('SoftUniBlogBundle.invalid_delete_permission_message')
             ]);
         }
 
