@@ -28,16 +28,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label" for="category_select">Category</label>
-                        <div class="col-sm-4">
-                            <select class="form-control" id="category_select"disabled>
-                                {% for option in select_options %}
-                                    <option value={{ option }}>{{ option|capitalize }}</option>
-                                {% endfor %}
-                            </select>
-                            <input id="real_category_select" name="article[category]" value={{ article.category }} hidden>
+                        <label class="col-sm-4 control-label" for="article_category">Category</label>
+                        <div class="col-sm-6">
+                            {{ form_widget(form.category) }}
                         </div>
                     </div>
+
 
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-4">

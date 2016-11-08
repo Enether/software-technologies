@@ -5,7 +5,9 @@ namespace SoftUniBlogBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use SoftUniBlogBundle\Entity\Article;
+use SoftUniBlogBundle\Entity\Category;
 use SoftUniBlogBundle\Form\ArticleType;
+use SoftUniBlogBundle\Form\CategoryType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -39,10 +41,9 @@ class ArticleController extends Controller
             return $this->redirectToRoute('blog_index');
         }
 
-        $available_article_categories = $this->getParameter('SoftUniBlogBundle.available_article_categories');
         return $this->render(
             'article/create.html.twig',
-            array('form' => $form->createView(),"select_options" => $available_article_categories)
+            array('form' => $form->createView(),"categories" => $this->getDoctrine()->getRepository(Category::class)->findAll())
         );
     }
 
@@ -72,6 +73,7 @@ class ArticleController extends Controller
         }
         return $this->render('article/show.html.twig',[
             "article" => $article,
+            "categories" => $this->getDoctrine()->getRepository(Category::class)->findAll()
         ]);
     }
 
@@ -128,7 +130,7 @@ class ArticleController extends Controller
         return $this->render('article/edit.html.twig', [
             "form" => $form->createView(),
             "article" => $originalArticle,
-            "select_options" => $this->getParameter('SoftUniBlogBundle.available_article_categories')
+            "categories" => $this->getDoctrine()->getRepository(Category::class)->findAll()
         ]);
     }
 

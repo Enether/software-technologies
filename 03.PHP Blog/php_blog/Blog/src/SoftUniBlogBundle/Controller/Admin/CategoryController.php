@@ -60,4 +60,34 @@ class CategoryController extends Controller
             'form' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/edit/{id}", name="admin_categories_edit")
+     *
+     * @param $id
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editCategory($id, Request $request)
+    {
+        $category = $this->getDoctrine()->getRepository(Category::class)->find($id);
+
+        $form= $this->createForm(CategoryType::class, $category);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($category);
+            $em->flush();
+
+            return $this->redirectToRoute('admin_categories');
+        }
+
+        return $this->render('admin/category/edit.html.twig',[
+            'category' => $category, 'form' => $form->createView(),
+            'categories' => $this->getDoctrine()->getRepository(Category::class)->findAll()
+    ]);
+    }
 }

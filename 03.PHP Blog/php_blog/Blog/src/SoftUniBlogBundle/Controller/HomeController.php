@@ -91,7 +91,12 @@ class HomeController extends Controller
             Article::class
         );
         # convert the category to an object
-        $articles = $this->getDoctrine()->getRepository(Category::class)->findOneBy(array('name'=>$category))->getArticles();
+        if ($category) {
+            $articles = $this->getDoctrine()->getRepository(Category::class)->findOneBy(array('name'=>$category))->getArticles();
+        }
+        else {
+            $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
+        }
         /* this returns an array of the articles according to the given criteria */
         if ($sortCriteria && $sortCriteria === 'newest')
         {
