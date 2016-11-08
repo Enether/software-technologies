@@ -4,6 +4,11 @@
 
     <div class="container body-content">
         <div class="row">
+            {% if (error|default(false)) %}
+            <div class="alert alert-danger">
+                <strong>{{ error_message }}</strong>
+            </div>
+            {% else %}
             <div class="form-group">
                 <form id="sortBox" method="get" action={{ path('blog_index') }}>
                     <select class="form-control" name="sort_by" id="selectSort" onchange="this.form.submit();">
@@ -12,37 +17,34 @@
                     </select>
                 </form>
             </div>
+
             {% for article in articles|default([]) %}
-            <div class="col-md-6">
-                <article>
-                    <header>
-                        <h2>
-                            {{ article.title }}
-                        </h2>
-                        <p>
-                            {{ article.summary }}
-                        </p>
+                <div class="col-md-6">
+                    <article>
+                        <header>
+                            <h2>
+                                {{ article.title }}
+                            </h2>
+                            <p>
+                                {{ article.summary }}
+                            </p>
 
-                        <small class="author">
-                            {{ article.author.getFullName() }}
-                        </small>
+                            <small class="author">
+                                {{ article.author.getFullName() }}
+                            </small>
 
-                        <footer>
-                            <div class="pull-right">
-                                <a class="btn btn-default btn-xs"
-                                   href="{{ path('article_show',
-                                    {'id': article.id}) }}">Read More</a>
-                            </div>
-                        </footer>
-                    </header>
-                </article>
-            </div>
-            {% endfor %}
-            {% if (error|default(false)) %}
-                <div class="alert alert-danger">
-                    <strong>{{ error_message }}</strong>
+                            <footer>
+                                <div class="pull-right">
+                                    <a class="btn btn-default btn-xs"
+                                       href="{{ path('article_show',
+                                       {'id': article.id}) }}">Read More</a>
+                                </div>
+                            </footer>
+                        </header>
+                    </article>
                 </div>
-            {% endif %}
+            {% endfor %}
         </div>
+        {% endif %}
     </div>
 {% endblock %}

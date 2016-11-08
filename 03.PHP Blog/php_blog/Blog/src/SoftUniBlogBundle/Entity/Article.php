@@ -56,18 +56,43 @@ class Article
     private $authorId;
 
     /**
+     * @return mixed
+     */
+    public function getCategoryId()
+    {
+        return $this->categoryId;
+    }
+
+    /**
+     * @var Category
+     *
+     * @ORM\ManyToOne(targetEntity="SoftUniBlogBundle\Entity\Category", inversedBy="articles")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
+     */
+    private $category;
+
+    /**
+     * @param mixed $categoryId
+     */
+    public function setCategoryId($categoryId)
+    {
+        $this->categoryId = $categoryId;
+    }
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="category_id", type="integer")
+     */
+    private $categoryId;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="creationDate", type="datetime")
      */
     private $creationDate;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="category", type="string")
-     */
-    private $category;
 
 
     public function __construct()
@@ -227,25 +252,20 @@ class Article
     }
 
     /**
-     * @return string
+     * @return Category
      */
-    public function getCategory(): string
+    public function getCategory()
     {
-        if ($this->category === null) {
-            $this->setCategory('temporary category which will be substituted once the form is submitted, because the category option is required.');
-        }
-
         return $this->category;
     }
 
     /**
-     * @param string $category
+     * @param Category $category
      */
-    public function setCategory(string $category)
+    public function setCategory(Category $category)
     {
         $this->category = $category;
     }
-
 
 }
 

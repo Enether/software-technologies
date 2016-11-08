@@ -10,7 +10,6 @@ parameters:
     mailer_user: null
     mailer_password: null
     secret: 8893fbc4275e4b02f8c7d77337d7fd8b4f7d3063
-    SoftUniBlogBundle.available_article_categories: ['business', 'sport', 'health', 'technology']
     SoftUniBlogBundle.invalid_edit_permission_message: 'You do not have permission to edit that article!'
     SoftUniBlogBundle.invalid_delete_permission_message: 'You do not have permission to delete that article!'
     SoftUniBlogBundle.invalid_article_message: 'No such article exists.'

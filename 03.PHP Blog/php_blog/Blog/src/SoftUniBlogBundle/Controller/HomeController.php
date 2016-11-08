@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use SoftUniBlogBundle\Entity\Article;
+use SoftUniBlogBundle\Entity\Category;
+use SoftUniBlogBundle\Form\CategoryType;
 use SoftUniBlogBundle\Repository\ArticleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,17 +30,20 @@ class HomeController extends Controller
         return $this->render('blog/index.html.twig',[
             "articles" => $articles,
             "selectedSort" => $sortCriteria,
+            "categories" => $this->getDoctrine()->getRepository(Category::class)->findAll()
         ]);
     }
 
     /**
-     * @Route("/articles/{category}")
+     * @Route("/articles/{category}", name="articles_in_category")
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function indexArticlesByCategoryAction($category)
     {
         // check if the given category is valid
-        if (!in_array($category, $this->getParameter('SoftUniBlogBundle.available_article_categories')))
+        $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
+        $categoriesArray = array_map(function(Category $c){return $c->getName();}, $categories);
+        if (!in_array($category, $categoriesArray))
         {
             return $this->render('blog/index.html.twig', [
                 "error" => true,
@@ -51,7 +56,9 @@ class HomeController extends Controller
 
         return $this->render('blog/index.html.twig',[
             "articles" => $articles,
-            "selectedSort" => $sortCriteria
+            "selectedSort" => $sortCriteria,
+            "categories" => $this->getDoctrine()->getRepository(Category::class)->findAll()
+
         ]);
     }
 
@@ -83,7 +90,8 @@ class HomeController extends Controller
             = $this->getDoctrine()->getRepository(
             Article::class
         );
-
+        # convert the category to an object
+        $articles = $this->getDoctrine()->getRepository(Category::class)->findOneBy(array('name'=>$category))->getArticles();
         /* this returns an array of the articles according to the given criteria */
         if ($sortCriteria && $sortCriteria === 'newest')
         {
@@ -94,7 +102,7 @@ class HomeController extends Controller
              */
             if ($category)
             {
-                $articles = array_reverse($articleRepository->findBy(array('category' => $category)));
+                $articles = array_reverse($articles);
             }
             else
             {
@@ -106,7 +114,6 @@ class HomeController extends Controller
             // sorts by the oldest articles first
             if ($category)
             {
-                $articles = $articleRepository->findBy(array('category' => $category));
             }
             else
             {
