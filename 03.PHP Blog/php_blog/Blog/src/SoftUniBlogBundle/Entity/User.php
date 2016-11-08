@@ -184,10 +184,16 @@ class User implements UserInterface
         foreach ($this->roles as $role)
         {
             /** @var $role Role */
-            $resultRoles[] = $role->getName();
+            $resultRoles[] = is_string($role) ? $role : $role->getName();
         }
 
         return $resultRoles;
+    }
+
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+        return $this;
     }
 
     /**
