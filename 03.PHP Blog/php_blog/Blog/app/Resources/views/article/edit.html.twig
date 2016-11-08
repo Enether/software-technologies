@@ -28,6 +28,13 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="col-sm-4 control-label" for="article_tags">tags</label>
+                        <div class="col-sm-4 ">
+                            <input class="form-control" id="article_tags" value="{{ article.tags | join(', ') }}" name="tags" required type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="col-sm-4 control-label" for="article_category">Category</label>
                         <div class="col-sm-6">
                             {{ form_widget(form.category) }}

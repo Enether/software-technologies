@@ -90,4 +90,38 @@ class CategoryController extends Controller
             'categories' => $this->getDoctrine()->getRepository(Category::class)->findAll()
     ]);
     }
+
+    /**
+     * @Route("/delete/{id}", name="admin_categories_delete")
+     *
+     * @param $id
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function deleteCategory($id, Request $request)
+    {
+        $category = $this->getDoctrine()->getRepository(Category::class)->find($id);
+
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            foreach ($category->getArticles() as $article) {
+                $em->remove($article);
+            }
+
+            $em->remove($category);
+            $em->flush();
+
+            return $this->redirectToRoute('admin_categories');
+        }
+
+        return $this->render('admin/category/delete.html.twig', [
+            'category' => $category, 'form' => $form->createView(),
+            'categories' => $this->getDoctrine()->getRepository(Category::class)->findAll()
+        ]);
+    }
 }

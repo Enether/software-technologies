@@ -34,6 +34,13 @@
                             </small>
 
                             <footer>
+                                <p>
+                                    tags:&nbsp;&nbsp;&nbsp;
+                                    {% for tag in article.tags %}
+                                        <a href="{{ path('articles_with_tag', {'tag': tag.name}) }}">{{ tag.name }}</a>
+                                    {% endfor %}
+                                </p>
+
                                 <div class="pull-right">
                                     <a class="btn btn-default btn-xs"
                                        href="{{ path('article_show',

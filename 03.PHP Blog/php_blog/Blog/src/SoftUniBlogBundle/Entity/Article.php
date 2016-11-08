@@ -2,6 +2,7 @@
 
 namespace SoftUniBlogBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -93,11 +94,51 @@ class Article
      */
     private $creationDate;
 
+    /**
+     * @return ArrayCollection
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param ArrayCollection $tags
+     */
+    public function setTags(ArrayCollection $tags)
+    {
+        $this->tags = $tags;
+    }
+
+
+    public function hasTag($tag)
+    {
+        return in_array($tag, get_object_vars($this->getTags()));
+    }
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="SoftUniBlogBundle\Entity\Tag")
+     * @ORM\JoinTable(name="article_tags",
+     *     joinColumns={@ORM\JoinColumn(name="article_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id")})
+     */
+    private $tags;
+
+    public function addTag($tag){
+        $this->tags->add($tag);
+    }
 
 
     public function __construct()
     {
         $this->creationDate = new \DateTime('now');
+        $this->tags = new ArrayCollection();
+    }
+
+    public function resetTags()
+    {
+        $this->tags = new ArrayCollection();
     }
 
     /**

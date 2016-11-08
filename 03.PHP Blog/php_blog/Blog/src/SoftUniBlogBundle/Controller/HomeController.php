@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use SoftUniBlogBundle\Entity\Article;
 use SoftUniBlogBundle\Entity\Category;
+use SoftUniBlogBundle\Entity\Tag;
 use SoftUniBlogBundle\Form\CategoryType;
 use SoftUniBlogBundle\Repository\ArticleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -26,6 +27,22 @@ class HomeController extends Controller
     {
         $sortCriteria = $this->getSortCriteria();
         $articles = $this->getArticles($sortCriteria, false);
+
+        return $this->render('blog/index.html.twig',[
+            "articles" => $articles,
+            "selectedSort" => $sortCriteria,
+            "categories" => $this->getDoctrine()->getRepository(Category::class)->findAll()
+        ]);
+    }
+
+    /**
+     * @Route("/articles/tag/{tag}", name="articles_with_tag")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function indexArticlesByTagAction($tag)
+    {
+        $sortCriteria = $this->getSortCriteria();
+        $articles = $this->getArticlesByTag($sortCriteria, $tag);
 
         return $this->render('blog/index.html.twig',[
             "articles" => $articles,
@@ -118,6 +135,50 @@ class HomeController extends Controller
         {
             // sorts by the oldest articles first
             if ($category)
+            {
+            }
+            else
+            {
+                $articles = $articleRepository->findAll();
+            }
+        }
+
+        return $articles;
+    }
+    private function getArticlesByTag($sortCriteria, $tag)
+    {
+        $articleRepository
+            = $this->getDoctrine()->getRepository(
+            Article::class
+        );
+        # convert the category to an object
+        if ($tag) {
+            $articles = $this->getDoctrine()->getRepository(Tag::class)->findOneBy(array('name'=>$tag))->getTags();
+        }
+        else {
+            $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
+        }
+        /* this returns an array of the articles according to the given criteria */
+        if ($sortCriteria && $sortCriteria === 'newest')
+        {
+            // sort by date ascending
+            // get the articles from the DB and revese them to have the newest appear first
+            /**
+             * @var $articles Article[]
+             */
+            if ($tag)
+            {
+                $articles = array_reverse($articles);
+            }
+            else
+            {
+                $articles = array_reverse($articleRepository->findAll());
+            }
+        }
+        else  // no sortCriteria or it's equal to oldest
+        {
+            // sorts by the oldest articles first
+            if ($tag)
             {
             }
             else

@@ -2,10 +2,12 @@
 
 namespace SoftUniBlogBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use SoftUniBlogBundle\Entity\Article;
 use SoftUniBlogBundle\Entity\Category;
+use SoftUniBlogBundle\Entity\Tag;
 use SoftUniBlogBundle\Form\ArticleType;
 use SoftUniBlogBundle\Form\CategoryType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -34,6 +36,20 @@ class ArticleController extends Controller
             $article->setCreationDate(new \DateTime());
             $author = $this->getUser();
             $article->setAuthor($author);
+
+            # tags
+            $tags = explode(', ', $request->get('tags'));
+            foreach ($tags as $tag)
+            {
+                // add the tags to the Article
+                $tagRepository = $this->getDoctrine()->getRepository(Tag::class);
+                $tagToAdd = $tagRepository->findOneBy(array('name' => $tag));
+                $article->addTag($tagToAdd);
+            }
+
+
+
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
             $em->flush();
@@ -116,6 +132,14 @@ class ArticleController extends Controller
         if ($form->isSubmitted() && $form->isValid())
         {
             // save the article
+            $newTags = explode(', ', $request->get('tags'));
+            $originalArticle->resetTags();
+            foreach ($newTags as $newTag)
+            {
+                $tagRepository = $this->getDoctrine()->getRepository(Tag::class);
+                $tagToAdd = $tagRepository->findOneBy(array('name' => $newTag));
+                $originalArticle->addTag($tagToAdd);
+            }
 
             // only editing the content is allowed
             $originalArticle->setContent($candidateArticle->getContent());

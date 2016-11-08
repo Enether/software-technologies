@@ -24,7 +24,7 @@
                         <td>{{ category.getName() }}</td>
                         <td>
                             <a class="btn btn-danger btn-xs" href={{ path('admin_categories_edit', {'id': category.id}) }}>Edit</a>
-                            <a class="btn btn-danger btn-xs"  href="#">Delete</a>
+                            <a class="btn btn-danger btn-xs"  href="{{ path('admin_categories_delete', {'id': category.id}) }}">Delete</a>
                         </td>
                     </tr>
                 {% endfor %}
