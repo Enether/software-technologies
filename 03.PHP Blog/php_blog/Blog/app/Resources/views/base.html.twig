@@ -41,14 +41,6 @@
                                 </ul>
                             </li>
                         {% endif %}
-
-                        {% if app.user and app.user.isAdmin() %}
-                            <li>
-                                <a href="/admin/users_list" style="color:red; border: red solid; background: #ff9999 ;">
-                                    Users
-                                </a>
-                            </li>
-                        {% endif %}
                         <li>
                             <a href="/articles/health">
                                 Health Articles
