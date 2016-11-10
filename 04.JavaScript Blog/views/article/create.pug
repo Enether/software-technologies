@@ -1,0 +1,20 @@
+extends ../layout
+
+block main-content
+  .container.body-content(class='span=8 offset=2')
+    .well
+      form.form-horizontal(method='post', action='/article/create')
+        fieldset
+          legend New Post
+            .form-group
+              label.col-sm-4.control-label Post Title
+              .col-sm-4
+                input#postTitle.form-control(type='text', placeholder='Post Title' name='title')
+            .form-group
+              label.col-sm-4.control-label Content
+              .col-sm-6
+                textarea#postContent.form-control(rows='5' name='content')
+            .form-group
+              .col-sm-4.col-sm-offset-4
+                button.btn.btn-default(type='reset') Cancel
+                input.btn.btn-primary(type='submit' value='Submit')

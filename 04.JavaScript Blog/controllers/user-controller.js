@@ -46,7 +46,7 @@ module.exports = {
   },
 
   loginGet: (req, res) => {
-    res.render('user/login')
+    res.render('user/login', {loginArgs: {}})
   },
 
   loginPost: (req, res) => {
