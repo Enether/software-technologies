@@ -32,5 +32,26 @@ module.exports = {
             user.save()
           })
       })
+  },
+
+  detailsGet: (req, res, id) => {
+    let articleId = req.params.id
+
+    // if (isNaN(parseInt(articleId))) {
+    //   res.redirect('/')
+    //   return
+    // }
+
+    Article
+      .findOne({_id: articleId})
+      .populate('author')
+      .then((article) => {
+        if (!article) {
+          res.redirect('/')
+          return
+        }
+
+        res.render('article/details', article)
+      })
   }
 }

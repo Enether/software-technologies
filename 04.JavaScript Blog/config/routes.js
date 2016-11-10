@@ -13,5 +13,6 @@ module.exports = (app) => {
 
   app.get('/article/create', controllers.article.createGet)
   app.post('/article/create', controllers.article.createPost)
+  app.get('/article/details/:id', controllers.article.detailsGet)
 }
 
