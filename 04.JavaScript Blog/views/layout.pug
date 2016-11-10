@@ -1,0 +1,40 @@
+html
+  head
+    title SoftUni Blog
+    link(rel='stylesheet' href='/stylesheets/style.css')
+    script(src='/js/jquery-1.10.2.js')
+    script(src='/js/bootstrap.js')
+  body
+    header
+      .navbar.navbar-default.navbar-fixed-top.text-uppercase
+        div.container
+          .navbar-header
+            a.navbar-brand(href='/') SoftUni Blog
+            button.navbar-toggle(type='button' data-toggle='collapse' data-target='.navbar-collapse')
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+          #user
+          if user
+            .navbar-collapse.collapse
+              ul.nav.navbar-nav.navbar-right
+                li
+                  a(href='/user/details')= 'Welcome ' + user.email
+                li
+                  a(href="/article/create") New Article
+                li
+                  a(href="/user/logout") Logout
+          unless user
+            .navbar-collapse.collapse
+              ul.nav.navbar-nav.navbar-right
+                li
+                  a(href="/user/register") Register
+                li
+                  a(href="/user/login") Login
+    if error
+      h2= error
+
+    block main-content
+  footer
+    .container.modal-footer
+      p &copy; 2016 - Stanislav Kozlovski                

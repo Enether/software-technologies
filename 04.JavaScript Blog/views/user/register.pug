@@ -1,0 +1,27 @@
+extends ../layout
+block main-content
+  .container.body-content(class='span=8 offset=2')
+    .well
+      form.form-horizontal(method='post', action='/user/register')
+        fieldset
+          legend Register
+          .form-group
+            label.col-sm-4.control-label(for='inputEmail') Email
+            .col-sm-4
+              input#inputEmail.form-control(type='text', placeholder='Email', name='email', required='', value=user.email)
+          .form-group
+            label.col-sm-4.control-label(for='inputFullName') Full Name
+            .col-sm-4
+              input#inputFullName.form-control(type='text', placeholder='Full Name', required='', name='fullName', value=user.fullName)
+          .form-group
+            label.col-sm-4.control-label(for='inputPassword') Password
+            .col-sm-4
+              input#inputPassword.form-control(type='password', placeholder='Password', required='', name='password')
+          .form-group
+            label.col-sm-4.control-label Confirm Password
+            .col-sm-4
+              input#inputPassword.form-control(type='password', placeholder='Confirm Password', required='', name='repeatedPassword')
+          .form-group
+            .col-sm-4.col-sm-offset-4
+              button.btn.btn-default(type='reset') Cancel
+              button.btn.btn-primary(type='submit') Submit
