@@ -1,5 +1,5 @@
-const User = require('mongoose').model('User');
-const encryption = require('./../utilities/encryption');
+const User = require('mongoose').model('User')
+const encryption = require('./../utilities/encryption')
 
 module.exports = {
   registerGet: (req, res) => {
@@ -18,8 +18,7 @@ module.exports = {
       }
 
       if (errorMsg) {
-        registerArgs.error = errorMsg
-        res.render('user/register', registerArgs)
+        res.render('user/register', {regArgs: registerArgs, error: errorMsg})
       } else {
         let salt = encryption.generateSalt()
         let passwordHash = encryption.hashPassword(registerArgs.password, salt)
@@ -35,7 +34,7 @@ module.exports = {
           req.logIn(user, (err) => {
             if (err) {
               registerArgs.error = err.message
-              res.render('user/register', registerArgs)
+              res.render('user/register', {regArgs: registerArgs, error: err.message})
               return
             }
 
@@ -56,7 +55,7 @@ module.exports = {
       if (!user || !user.authenticate(loginArgs.password)) {
         let errorMsg = 'Either username or password is invalid!'
         loginArgs.error = errorMsg
-        res.render('user/login', loginArgs)
+        res.render('user/login', {loginArgs: loginArgs})
         return
       }
 
