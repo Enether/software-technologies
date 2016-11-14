@@ -1,0 +1,21 @@
+extends ../layout
+
+block main-content
+  .container.body-content(class='span=8 offset=2')
+    .well
+      - let deleteLink = '/article/delete/' + article.id
+      form.form-horizontal(method='post', action=deleteLink)
+        fieldset
+          legend Delete Post
+            .form-group
+              label.col-sm-4.control-label Post Title
+              .col-sm-4
+                input#postTitle.form-control(type='text', placeholder='Post Title' name='title' value=article.title disabled)
+            .form-group
+              label.col-sm-4.control-label Content
+              .col-sm-6
+                textarea#postContent.form-control(rows='5' name='content' disabled)= article.content
+            .form-group
+              .col-sm-4.col-sm-offset-4
+                button.btn.btn-default(type='reset') Cancel
+                input.btn.btn-danger(type='submit' value='Delete')
