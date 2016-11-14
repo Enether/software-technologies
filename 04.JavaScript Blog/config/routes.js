@@ -14,5 +14,11 @@ module.exports = (app) => {
   app.get('/article/create', controllers.article.createGet)
   app.post('/article/create', controllers.article.createPost)
   app.get('/article/details/:id', controllers.article.detailsGet)
+
+  app.get('/article/edit/:id', controllers.article.editGet)
+  app.post('/article/edit/:id', controllers.article.editPost)
+
+  app.get('/article/delete/:id', controllers.article.deleteGet)
+  app.post('/article/delete/:id', controllers.article.deletePost)
 }
 

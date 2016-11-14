@@ -7,7 +7,7 @@ let userSchema = mongoose.Schema(
     passwordHash: { type: String, required: true },
     fullName: { type: String, required: true },
     salt: { type: String, required: true },
-    articles: { type: [mongoose.Schema.Types.ObjectId], default: [] }
+    articles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article', default: [] }]
   }
 )
 

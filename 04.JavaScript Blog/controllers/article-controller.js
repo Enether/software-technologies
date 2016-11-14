@@ -34,7 +34,7 @@ module.exports = {
       })
   },
 
-  detailsGet: (req, res, id) => {
+  detailsGet: (req, res) => {
     let articleId = req.params.id
 
     // if (isNaN(parseInt(articleId))) {
@@ -43,7 +43,7 @@ module.exports = {
     // }
 
     Article
-      .findOne({_id: articleId})
+      .findOne({ _id: articleId })
       .populate('author')
       .then((article) => {
         if (!article) {
@@ -52,6 +52,74 @@ module.exports = {
         }
 
         res.render('article/details', article)
+      })
+  },
+
+  editGet: (req, res) => {
+    let articleId = req.params.id
+    Article
+      .findById(articleId)
+      .then((article) => {
+        if (!article) {
+          res.redirect('/')
+          return
+        }
+
+        res.render('article/edit', { article: article })
+      })
+  },
+
+  editPost: (req, res) => {
+    let articleId = req.params.id
+    let editedTitle = req.body.title
+    let editedContent = req.body.content
+
+    let errorMsg = ''
+    if (!editedTitle) {
+      errorMsg = 'Title must not be empty!'
+    } else if (!editedContent) {
+      errorMsg = 'Content must not be empty!'
+    }
+
+    if (errorMsg) {
+      res.render('article/edit', {error: errorMsg, article: {}})
+      return
+    }
+
+    Article.update({ _id: articleId }, { $set: { title: editedTitle, content: editedContent } })
+      .then(() => {
+        res.redirect(`/article/details/${articleId}`)
+      })
+  },
+
+  deleteGet: (req, res) => {
+    let articleId = req.params.id
+    Article
+      .findById(articleId)
+      .then((article) => {
+        if (!article) {
+          res.redirect('article', {error: `Article with ID ${articleId} does not exist!`})
+        }
+
+        res.render('article/delete', {article: article})
+      })
+  },
+
+  deletePost: (req, res) => {
+    let articleId = req.params.id
+    console.log(articleId)
+    Article
+      .findOneAndRemove({_id: articleId})
+      .populate('author')
+      .then((article) => {
+        let articleIndex = article.author.articles.indexOf(articleId)
+
+        if (articleIndex === -1) {
+          res.render('article/delete', {error: `The author of article with id ${articleIndex} does not seem to have it in his articles collection.`})
+        }
+
+        article.author.articles.splice(article.author.articles.indexOf(articleIndex), 1)
+        res.redirect('/')
       })
   }
 }
