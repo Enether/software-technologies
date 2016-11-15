@@ -1,4 +1,6 @@
-const User = require('mongoose').model('User')
+const mongoose = require('mongoose')
+const User = mongoose.model('User')
+const Role = mongoose.model('Role')
 const encryption = require('./../utilities/encryption')
 
 module.exports = {
@@ -18,27 +20,39 @@ module.exports = {
       }
 
       if (errorMsg) {
-        res.render('user/register', {regArgs: registerArgs, error: errorMsg})
+        res.render('user/register', { regArgs: registerArgs, error: errorMsg })
       } else {
-        let salt = encryption.generateSalt()
-        let passwordHash = encryption.hashPassword(registerArgs.password, salt)
+        Role.findOne({ name: 'Usxaxaer' }).then(role => {
+          if (!role) {
+            console.log('Cannot register user because role User does not exist!')
+            res.render('home/index', {error: 'Error while registering.'})
+            return
+          }
 
-        let userObject = {
-          email: registerArgs.email,
-          passwordHash: passwordHash,
-          fullName: registerArgs.fullName,
-          salt: salt
-        }
+          let salt = encryption.generateSalt()
+          let passwordHash = encryption.hashPassword(registerArgs.password, salt)
+          // create the user object
+          let userObject = {
+            email: registerArgs.email,
+            passwordHash: passwordHash,
+            fullName: registerArgs.fullName,
+            salt: salt,
+            roles: [role._id]
+          }
+          // save the user
+          User.create(userObject).then(user => {
+            req.logIn(user, (err) => {
+              if (err) {
+                registerArgs.error = err.message
+                res.render('user/register', { regArgs: registerArgs, error: err.message })
+                return
+              }
+              // Add the user to the role's array
+              role.users.push(user.id)
+              role.save()
 
-        User.create(userObject).then(user => {
-          req.logIn(user, (err) => {
-            if (err) {
-              registerArgs.error = err.message
-              res.render('user/register', {regArgs: registerArgs, error: err.message})
-              return
-            }
-
-            res.redirect('/')
+              res.redirect('/')
+            })
           })
         })
       }
@@ -46,7 +60,7 @@ module.exports = {
   },
 
   loginGet: (req, res) => {
-    res.render('user/login', {loginArgs: {}})
+    res.render('user/login', { loginArgs: {} })
   },
 
   loginPost: (req, res) => {
@@ -55,7 +69,7 @@ module.exports = {
       if (!user || !user.authenticate(loginArgs.password)) {
         let errorMsg = 'Either username or password is invalid!'
         loginArgs.error = errorMsg
-        res.render('user/login', {loginArgs: loginArgs})
+        res.render('user/login', { loginArgs: loginArgs })
         return
       }
 
