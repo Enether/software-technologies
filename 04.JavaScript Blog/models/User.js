@@ -8,7 +8,7 @@ let userSchema = mongoose.Schema(
     fullName: { type: String, required: true },
     salt: { type: String, required: true },
     articles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Article', default: [] }],
-    role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role'}
+    roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Role' }]
   }
 )
 
