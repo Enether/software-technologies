@@ -30,6 +30,7 @@ module.exports = {
           .then((user) => {
             user.articles.push(article._id)
             user.save()
+            res.redirect('/')
           })
       })
   },
@@ -120,8 +121,11 @@ module.exports = {
           return
         }
 
+        // remove it from the author's articles
         article.author.articles.splice(article.author.articles.indexOf(articleIndex), 1)
-        res.redirect('/')
+        article.author.save().then(() => {
+          res.redirect('/')
+        })
       })
   }
 }
