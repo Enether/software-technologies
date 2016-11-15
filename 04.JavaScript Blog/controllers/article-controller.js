@@ -51,7 +51,7 @@ module.exports = {
           return
         }
 
-        res.render('article/details', article)
+        res.render('article/details', {article: article, user: req.user})
       })
   },
 
