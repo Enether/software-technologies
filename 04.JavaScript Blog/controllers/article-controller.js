@@ -9,13 +9,12 @@ module.exports = {
 
   createPost: (req, res) => {
     let article = req.body
-    console.log(article)
-    if (!article || !article.title || !article.content) {
-      res.render('article/create', { error: 'Invalid article!' })
-      return
-    } else if (!req.isAuthenticated()) {
+    if (!req.isAuthenticated()) {
       // need to be logged in!
       res.render('article/create', { error: 'You need to be logged in to create an article!' })
+      return
+    } else if (!article || !article.title || !article.content) {
+      res.render('article/create', { error: 'Invalid article!' })
       return
     }
     article.author = req.user._id
@@ -66,7 +65,6 @@ module.exports = {
       return
     }
 
-
     Article
       .findById(articleId)
       .then((article) => {
@@ -83,6 +81,14 @@ module.exports = {
 
   editPost: (req, res) => {
     let articleId = req.params.id
+
+    // check if user is logged in
+    if (!req.isAuthenticated()) {
+      req.session.returnUrl = `/article/edit/${articleId}`
+      res.redirect('/user/login')
+      return
+    }
+
     let editedTitle = req.body.title
     let editedContent = req.body.content
 
@@ -97,10 +103,22 @@ module.exports = {
       res.render('article/edit', { error: errorMsg, article: {} })
       return
     }
-
-    Article.update({ _id: articleId }, { $set: { title: editedTitle, content: editedContent } })
-      .then(() => {
-        res.redirect(`/article/details/${articleId}`)
+    Article
+      .findById(articleId)
+      .then(article => {
+        if (!(req.user.isAuthor(article) || req.user.isAdmin())) {
+          res.redirect('/')
+          return
+        }
+        article.title = editedTitle
+        article.content = editedContent
+        article.save().then((err, article) => {
+          if (!err) {
+            res.render('article/edit', { error: err.message })
+            return
+          }
+          res.redirect(`/article/details/${articleId}`)
+        })
       })
   },
 
@@ -131,13 +149,21 @@ module.exports = {
 
   deletePost: (req, res) => {
     let articleId = req.params.id
-    console.log(articleId)
+    if (!req.isAuthenticated()) {
+      req.session.returnUrl = `/article/delete/${articleId}`
+      res.redirect('/user/login')
+      return
+    }
     Article
       .findOneAndRemove({ _id: articleId })
       .populate('author')
       .then((article) => {
-        let articleIndex = article.author.articles.indexOf(articleId)
+        if (!(req.user.isAuthor(article) || req.user.isAdmin())) {
+          res.redirect('/')
+          return
+        }
 
+        let articleIndex = article.author.articles.indexOf(articleId)
         if (articleIndex === -1) {
           res.render('article/delete', { error: `The author of article with id ${articleIndex} does not seem to have it in his articles collection.` })
           return
