@@ -17,6 +17,41 @@ userSchema.method({
   authenticate: function (password) {
     let inputPasswordHash = encryption.hashPassword(password, this.salt)
     return inputPasswordHash === this.passwordHash
+  },
+
+  isAuthor: function (article) {
+    // returns a boolean indicating if the user is the author of the given article
+    if (!article) {
+      console.log("Don't send me empty articles you doofus")
+      return false
+    }
+
+    return article.author._id === this._id
+  },
+
+  isAdmin: function () {
+    // returns a boolean indicating if the user is an admin
+    Role
+      .findOne({name: 'Admin'})
+      .then(role => {
+        if (!role) {
+          console.log('Admin role does not exist!')
+          return false
+        }
+
+        return this.roles.indexOf(role._id) !== -1
+      })
+  },
+
+  isInRole: function (role) {
+    Role.findOne({name: role}).then(role => {
+      if (!role) {
+        console.log(`No role such as ${role}!`)
+        return false
+      }
+
+      return this.roles.indexOf(role) !== -1
+    })
   }
 })
 
