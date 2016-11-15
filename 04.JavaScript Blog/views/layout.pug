@@ -32,9 +32,9 @@ html
                 li
                   a(href="/user/login") Login
     if error
-      h2= error
-
-    block main-content
+      h2(style="font: 30px; color: red; font-style: bold; text-align: center")= error
+    else
+      block main-content
   footer
     .container.modal-footer
       p &copy; 2016 - Stanislav Kozlovski                
