@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Role = mongoose.model('Role')
 const encryption = require('./../utilities/encryption')
 
 let userSchema = mongoose.Schema(
@@ -22,6 +23,44 @@ userSchema.method({
 const User = mongoose.model('User', userSchema)
 
 module.exports = User
+
+// create an admin on server start if he doesn't exist
+module.exports.seedAdmin = () => {
+  Role
+    .findOne({name: 'Admin'})
+    .then(role => {
+      if (!role) {
+        console.log('The Admin role is missing, cannot seed the admin')
+        return
+      }
+
+      User
+        .findOne({email: 'admin'})
+        .then(admin => {
+          if (!admin) {
+            let adminSalt = encryption.generateSalt()
+            let adminObject = {
+              email: 'admin',
+              passwordHash: encryption.hashPassword('123', adminSalt),
+              fullName: 'ANONYMOUS',
+              salt: adminSalt,
+              roles: [role._id]
+            }
+
+            User.create(adminObject).then(admin => {
+              role.users.push(admin._id)
+              role.save(err => {
+                if (err) {
+                  console.log(err.message)
+                } else {
+                  console.log('Admin seeded successfully!')
+                }
+              })
+            })
+          }
+        })
+    })
+}
 
 
 

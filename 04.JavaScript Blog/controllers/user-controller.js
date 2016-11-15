@@ -25,7 +25,7 @@ module.exports = {
         Role.findOne({ name: 'Usxaxaer' }).then(role => {
           if (!role) {
             console.log('Cannot register user because role User does not exist!')
-            res.render('home/index', {error: 'Error while registering.'})
+            res.render('user/register', {regArgs: registerArgs, error: 'Error while registering.'})
             return
           }
 
