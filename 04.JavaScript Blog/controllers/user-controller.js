@@ -22,7 +22,7 @@ module.exports = {
       if (errorMsg) {
         res.render('user/register', { regArgs: registerArgs, error: errorMsg })
       } else {
-        Role.findOne({ name: 'Usxaxaer' }).then(role => {
+        Role.findOne({ name: 'User' }).then(role => {
           if (!role) {
             console.log('Cannot register user because role User does not exist!')
             res.render('user/register', {regArgs: registerArgs, error: 'Error while registering.'})
@@ -79,8 +79,13 @@ module.exports = {
           res.redirect('/user/login', { error: err.message })
           return
         }
+        let returnUrl = '/'
+        if (req.session.returnUrl) {
+          returnUrl = req.session.returnUrl
+          delete req.session.returnUrl
+        }
 
-        res.redirect('/')
+        res.redirect(returnUrl)
       })
     })
   },

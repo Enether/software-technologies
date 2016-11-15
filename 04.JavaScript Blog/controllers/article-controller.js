@@ -58,15 +58,26 @@ module.exports = {
 
   editGet: (req, res) => {
     let articleId = req.params.id
+
+    // check if user is logged in
+    if (!req.isAuthenticated()) {
+      req.session.returnUrl = `/article/edit/${articleId}`
+      res.redirect('/user/login')
+      return
+    }
+
+
     Article
       .findById(articleId)
       .then((article) => {
-        if (!article) {
-          res.redirect('/')
-          return
-        }
+        req.user.isAdmin().then(isAdmin => {
+          if (!article || !(req.user.isAuthor(article) || isAdmin)) {
+            res.redirect('/')
+            return
+          }
 
-        res.render('article/edit', { article: article })
+          res.render('article/edit', { article: article })
+        })
       })
   },
 
@@ -83,7 +94,7 @@ module.exports = {
     }
 
     if (errorMsg) {
-      res.render('article/edit', {error: errorMsg, article: {}})
+      res.render('article/edit', { error: errorMsg, article: {} })
       return
     }
 
@@ -95,15 +106,26 @@ module.exports = {
 
   deleteGet: (req, res) => {
     let articleId = req.params.id
+
+    if (!req.isAuthenticated()) {
+      req.session.returnUrl = `/article/delete/${articleId}`
+      res.redirect('/user/login')
+      return
+    }
+
     Article
       .findById(articleId)
       .then((article) => {
         if (!article) {
-          res.render('article/delete', {error: `Article with ID ${articleId} does not exist!`, article: {}})
+          res.render('article/delete', { error: `Article with ID ${articleId} does not exist!`, article: {} })
+          return
+        }
+        if (!req.user.isAuthor(article) || !req.user.isAdmin()) {
+          res.redirect('/')
           return
         }
 
-        res.render('article/delete', {article: article})
+        res.render('article/delete', { article: article })
       })
   },
 
@@ -111,13 +133,13 @@ module.exports = {
     let articleId = req.params.id
     console.log(articleId)
     Article
-      .findOneAndRemove({_id: articleId})
+      .findOneAndRemove({ _id: articleId })
       .populate('author')
       .then((article) => {
         let articleIndex = article.author.articles.indexOf(articleId)
 
         if (articleIndex === -1) {
-          res.render('article/delete', {error: `The author of article with id ${articleIndex} does not seem to have it in his articles collection.`})
+          res.render('article/delete', { error: `The author of article with id ${articleIndex} does not seem to have it in his articles collection.` })
           return
         }
 

@@ -26,12 +26,12 @@ userSchema.method({
       return false
     }
 
-    return article.author._id === this._id
+    return article.author.toString() === this.id.toString()
   },
 
   isAdmin: function () {
-    // returns a boolean indicating if the user is an admin
-    Role
+    // returns a promise returning a boolean indicating if the user is an admin
+    return Role
       .findOne({name: 'Admin'})
       .then(role => {
         if (!role) {
@@ -39,12 +39,13 @@ userSchema.method({
           return false
         }
 
-        return this.roles.indexOf(role._id) !== -1
+        return this.roles.indexOf(role.id.toString()) !== -1
       })
   },
 
   isInRole: function (role) {
-    Role.findOne({name: role}).then(role => {
+    // returns a promise returning a boolean indicating if the user has the given role
+    return Role.findOne({name: role}).then(role => {
       if (!role) {
         console.log(`No role such as ${role}!`)
         return false
