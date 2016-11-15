@@ -98,7 +98,8 @@ module.exports = {
       .findById(articleId)
       .then((article) => {
         if (!article) {
-          res.redirect('article', {error: `Article with ID ${articleId} does not exist!`})
+          res.render('article/delete', {error: `Article with ID ${articleId} does not exist!`, article: {}})
+          return
         }
 
         res.render('article/delete', {article: article})
@@ -116,6 +117,7 @@ module.exports = {
 
         if (articleIndex === -1) {
           res.render('article/delete', {error: `The author of article with id ${articleIndex} does not seem to have it in his articles collection.`})
+          return
         }
 
         article.author.articles.splice(article.author.articles.indexOf(articleIndex), 1)
