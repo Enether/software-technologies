@@ -18,6 +18,9 @@ html
           if user
             .navbar-collapse.collapse
               ul.nav.navbar-nav.navbar-right
+                if user.isAdmin
+                  li
+                    a(href='/admin/user/all') Users List
                 li
                   a(href='/user/details')= 'Welcome ' + user.email
                 li
