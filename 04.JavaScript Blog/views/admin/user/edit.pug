@@ -1,0 +1,29 @@
+extends ../../layout
+
+block main-content
+  .container.body-content(class='span=8 offset=2')
+    .well
+      - let editLink = '/admin/user/' + user.id + '/edit'
+      form.form-horizontal(method='post', action=editLink)
+        fieldset
+          legend Edit User
+            .form-group
+              label.col-sm-4.control-label User Email
+              .col-sm-4
+                input#postTitle.form-control(type='text', name='email' value=user.email hidden)
+            .form-group
+              label.col-sm-4.control-label User Fullname
+              .col-sm-4
+                input#postTitle.form-control(type='text', name='fullName' value=user.fullName)
+            .form-group
+              label.col-sm-4.control-label User Password
+              .col-sm-4
+                input#postTitle.form-control(type='password', name='password')
+            .form-group
+              label.col-sm-4.control-label Confirm Password
+              .col-sm-4
+                input#postTitle.form-control(type='password', name='confirmPassword')
+            .form-group
+              .col-sm-4.col-sm-offset-4
+                button.btn.btn-default(type='reset') Cancel
+                input.btn.btn-info(type='submit' value='Edit')

@@ -20,5 +20,24 @@ module.exports = (app) => {
 
   app.get('/article/delete/:id', controllers.article.deleteGet)
   app.post('/article/delete/:id', controllers.article.deletePost)
+  // EVERYTHING BELOW REQUIRES AUTH
+  // admin authentication middleware
+  app.use((req, res, next) => {
+    if (!req.isAuthenticated()) {
+      req.session.returnUrl = req.url
+
+      res.redirect('/user/login')
+    } else {
+      req.user.isAdmin().then(isAdmin => {
+        if (!isAdmin) {
+          res.redirect('/')
+        }
+        next()
+      })
+    }
+  })
+  app.get('/admin/user/all', controllers.admin.user.allUsersGet)
+  app.get('/admin/user/:id/edit', controllers.admin.user.editGet)
+  app.post('/admin/user/:id/edit', controllers.admin.user.editPost)
 }
 

@@ -1,0 +1,13 @@
+extends ../../layout
+
+block main-content
+  .row
+    .table
+      for user in users
+        tr
+          if (user.isAdmin())
+            h1= ADMIN
+          td= user.email
+          td= user.fullName
+        br
+        br
