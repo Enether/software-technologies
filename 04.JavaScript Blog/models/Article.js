@@ -19,7 +19,6 @@ articleSchema.method({
     })
 
     let Category = mongoose.model('Category')
-    console.log(this.category)
     Category.findById(this.category).then(category => {
       if (category) {
         category.articles.push(this.id)

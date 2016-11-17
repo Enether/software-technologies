@@ -1,0 +1,16 @@
+extends ../layout
+
+block main-content
+  .container.body-content
+    .row
+      each article in articles
+        .col-md-6
+          article
+            header
+              h2= article.title
+            p= article.content
+            small.author= article.author.fullName
+            footer
+              .pull-right
+              - let articleLink = '/article/details/' + article.id
+                a.btn.btn-default.btn-xs(href=articleLink) Read more »
