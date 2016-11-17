@@ -8,15 +8,20 @@ module.exports = {
     User
       .find({})
       .then(users => {
-        if (!users) {
-          console.log('No users exist!')
-          return
-        }
-        // TODO: Iterate through users and add isAdmin to them
-        res.render('admin/user/all', { users: users })
+        let promises = users.map((user) => {
+          return new Promise((resolve, reject) => {
+            user.isAdmin().then(isAdmin => {
+              user.isAdministrator = isAdmin
+              resolve()
+            })
+          })
+        })
+        // this waits for all the promises to end
+        Promise.all(promises).then(() => {
+          res.render('admin/user/all', { users: users })
+        })
       })
   },
-
   editGet: (req, res) => {
     let userId = req.params.id
 

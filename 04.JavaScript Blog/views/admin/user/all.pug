@@ -1,13 +1,25 @@
 extends ../../layout
 
 block main-content
-  .row
-    .table
-      for user in users
-        tr
-          if (user.isAdmin())
-            h1= ADMIN
-          td= user.email
-          td= user.fullName
-        br
-        br
+  .container.body-content
+    .well
+      h2 All Users
+      .row
+        table.table.table-striped.table-hover
+          thead
+            tr
+              th #
+              th Full Name
+              th Email
+              th Actions
+          tbody
+          for user in users
+            - let isAdminClass = user.isAdministrator === true ? 'info' : ''
+            tr(class=isAdminClass)
+              td= user.id
+              td= user.fullName
+              td= user.email
+              td
+                a(href='/admin/user/edit/{{this.id}}') Edit
+                a(href='/admin/user/delete/{{this.id}}') Delete
+            
