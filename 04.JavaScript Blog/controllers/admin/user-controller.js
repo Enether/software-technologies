@@ -16,7 +16,8 @@ module.exports = {
             })
           })
         })
-        // this waits for all the promises to end
+        // The Promise.all(iterable) method returns a promise that resolves when all of the promises in the iterable argument have resolved,
+        // or rejects with the reason of the first passed promise that rejects.
         Promise.all(promises).then(() => {
           res.render('admin/user/all', { users: users })
         })

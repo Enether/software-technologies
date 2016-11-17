@@ -23,12 +23,13 @@ module.exports = (app, config) => {
   app.use((req, res, next) => {
     if (req.user) {
       res.locals.user = req.user
-      req.user.isAdmin(isAdmin => {
-        res.locals.user.isAdmin = isAdmin
+      req.user.isAdmin().then(isAdmin => {
+        res.locals.user.isAdministrator = isAdmin
+        next()
       })
+    } else {
+      next()
     }
-
-    next()
   })
 
   app.use(express.static(path.join(config.rootFolder, 'public')))
