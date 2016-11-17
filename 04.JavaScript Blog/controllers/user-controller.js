@@ -41,6 +41,7 @@ module.exports = {
           }
           // save the user
           User.create(userObject).then(user => {
+            user.addToRoles()  // no need to wait for this, having the user in the roles' users array is not important
             req.logIn(user, (err) => {
               if (err) {
                 registerArgs.error = err.message
@@ -48,9 +49,6 @@ module.exports = {
                 return
               }
               // Add the user to the role's array
-              role.users.push(user.id)
-              role.save()
-
               res.redirect('/')
             })
           })

@@ -57,31 +57,38 @@ userSchema.method({
 
   delete: function () {
     const Article = mongoose.model('Article')
-
-    // remove the user of the roles' records
+    // get deletion promises and return an array of all the promises
     let rolePromises = this.roles.map((role) => {
       return new Promise((resolve, reject) => {
         Role.findById(role).then(role => {
           role.users.remove(this.id)
-          role.save().then(rl => { resolve() })
+          role.save()
+          resolve()
         })
       })
     })
     let articlePromises = this.articles.map((article) => {
       return new Promise((resolve, reject) => {
         Article.findById(article).then(article => {
-          if (!article) {
-            console.log('Article in the users articles does not exist in the DB!')
-            resolve()
-            return
-          }
-          article.remove().then(() => { resolve() })
+          // TODO: Update with promise after we add tags/categories
+          //article.delete() unneeded for now
+          article.remove()
+          resolve()
         })
       })
     })
     rolePromises.push.apply(rolePromises, articlePromises)
-    console.log(rolePromises)
     return rolePromises
+  },
+
+  addToRoles: function () {
+    // adds the user to the Roles' users array
+    for (let role of this.roles) {
+      Role.findById(role).then(role => {
+        role.users.push(this.id)
+        role.save()
+      })
+    }
   }
 })
 

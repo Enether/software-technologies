@@ -24,13 +24,8 @@ module.exports = {
       .then((article) => {
         console.log('User ' + req.user.fullName + ' with e-mail ' + req.user.email + ' created an article named ' + article.title)
         // add the article to the user's articles
-        User
-          .findOne(req.user._id)
-          .then((user) => {
-            user.articles.push(article._id)
-            user.save()
-            res.redirect('/')
-          })
+        article.insertInAuthor()
+        res.redirect('/')
       })
   },
 
@@ -51,7 +46,7 @@ module.exports = {
           return
         }
 
-        res.render('article/details', {article: article, user: req.user})
+        res.render('article/details', { article: article, user: req.user })
       })
   },
 
@@ -155,7 +150,7 @@ module.exports = {
       return
     }
     Article
-      .findOneAndRemove({ _id: articleId })
+      .findById(articleId)
       .populate('author')
       .then((article) => {
         if (!(req.user.isAuthor(article) || req.user.isAdmin())) {
@@ -168,12 +163,10 @@ module.exports = {
           res.render('article/delete', { error: `The author of article with id ${articleIndex} does not seem to have it in his articles collection.` })
           return
         }
-
-        // remove it from the author's articles
-        article.author.articles.splice(article.author.articles.indexOf(articleIndex), 1)
-        article.author.save().then(() => {
-          res.redirect('/')
-        })
+        // TODO: Use promises once we add more things to article
+        article.delete()
+        article.remove()
+        res.redirect('/')
       })
   }
 }
