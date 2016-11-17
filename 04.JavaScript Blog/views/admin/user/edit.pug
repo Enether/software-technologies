@@ -24,6 +24,13 @@ block main-content
               .col-sm-4
                 input#postTitle.form-control(type='password', name='confirmPassword')
             .form-group
+              for role in roles
+                .col-sm-4.col-sm-offset-4
+                - let checked = role.isChecked
+                  input(type="checkbox", name="roles", value=role.name, checked=role.isChecked)
+                  | #{role.name}
+
+            .form-group
               .col-sm-4.col-sm-offset-4
                 button.btn.btn-default(type='reset' onclick="window.history.back()") Cancel
                 input.btn.btn-info(type='submit' value='Edit')

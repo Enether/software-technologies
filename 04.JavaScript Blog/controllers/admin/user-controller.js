@@ -1,6 +1,8 @@
 // all the user related functions an admin can do to a user
 const mongoose = require('mongoose')
 const User = mongoose.model('User')
+const Role = mongoose.model('Role')
+
 const encryption = require('../../utilities/encryption')
 
 module.exports = {
@@ -31,8 +33,12 @@ module.exports = {
         // ERROR
         return
       }
-
-      res.render('admin/user/edit', { user: user })
+      Role.find({}).then(roles => {
+        for (let role of roles) {
+          role.isChecked = user.roles.indexOf(role.id) !== -1
+        }
+        res.render('admin/user/edit', { user: user, roles: roles })
+      })
     })
   },
 
@@ -53,19 +59,29 @@ module.exports = {
         return
       }
       User.findById(userId).then(user => {
-        if (editArgs.password) {
-          let hashedPassword = encryption.hashPassword(editArgs.password, user.salt)
-          user.passwordHash = hashedPassword
-        }
-        user.email = editArgs.email
-        user.fullName = editArgs.fullName
-        user.save(err => {
-          if (err) {
-            console.log(err.message)
-          }
-          // Successful edit!
-          res.redirect('/admin/user/all')
-        })
+        Role.find({})
+          .then(roles => {
+            // read the new roles from the input
+            let newRoles = roles.filter(role => {
+              return editArgs.roles.indexOf(role.name) !== -1  // get the roles that are in
+            }).map(role => { return role.id })
+
+            if (editArgs.password) {
+              let hashedPassword = encryption.hashPassword(editArgs.password, user.salt)
+              user.passwordHash = hashedPassword
+            }
+            user.email = editArgs.email
+            user.fullName = editArgs.fullName
+            user.roles = newRoles
+            user.save(err => {
+              if (err) {
+                console.log(err.message)
+                return
+              }
+              // Successful edit!
+              res.redirect('/admin/user/all')
+            })
+          })
       })
     })
   }
