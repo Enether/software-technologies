@@ -1,0 +1,23 @@
+extends ../../layout
+
+block main-content
+  .container.body-content(class='span=8 offset=2')
+    .well
+    - let deleteUrl = '/admin/user/' + delUser.id + '/delete/'
+      form.form-horizontal(action=deleteUrl, method='post')
+        fieldset
+          legend
+            | Delete User - 
+            | #{delUser.fullName}
+          .form-group
+            label.col-sm-4.control-label(for='email') Email
+            .col-sm-4
+              input#email.form-control(value=delUser.email, name='email', required='', type='text', disabled)
+          .form-group
+            label.col-sm-4.control-label(for='fullName') Full Name
+            .col-sm-4
+              input#fullName.form-control(type='text', value= delUser.fullName, name='fullName', disabled)
+          .form-group
+            .col-sm-4.col-sm-offset-4
+              a.btn.btn-default(href='window.history.back()') Cancel
+              button.btn.btndanger(type='submit') Delete

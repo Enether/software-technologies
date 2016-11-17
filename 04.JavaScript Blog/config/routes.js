@@ -39,5 +39,7 @@ module.exports = (app) => {
   app.get('/admin/user/all', controllers.admin.user.allUsersGet)
   app.get('/admin/user/:id/edit', controllers.admin.user.editGet)
   app.post('/admin/user/:id/edit', controllers.admin.user.editPost)
+  app.get('/admin/user/:id/delete', controllers.admin.user.deleteGet)
+  app.post('/admin/user/:id/delete', controllers.admin.user.deletePost)
 }
 

@@ -37,7 +37,7 @@ module.exports = {
         for (let role of roles) {
           role.isChecked = user.roles.indexOf(role.id) !== -1
         }
-        res.render('admin/user/edit', { user: user, roles: roles })
+        res.render('admin/user/edit', { editUser: user, roles: roles })
       })
     })
   },
@@ -82,6 +82,35 @@ module.exports = {
               res.redirect('/admin/user/all')
             })
           })
+      })
+    })
+  },
+
+  deleteGet: (req, res) => {
+    let userId = req.params.id
+    User.findById(userId).then(user => {
+      if (!user) {
+        console.log('No such user exists!')
+        return
+      }
+
+      res.render('admin/user/delete', { delUser: user })
+    })
+  },
+
+  deletePost: (req, res) => {
+    let userId = req.params.id
+    User.findById(userId).then(user => {
+      if (!user) {
+        console.log('No such user exists!')
+        return
+      }
+
+      // clean up articles
+      let deletionPromises = user.delete()
+      Promise.all(deletionPromises).then(() => {
+        user.remove()
+        res.redirect('/')
       })
     })
   }

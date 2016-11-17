@@ -32,7 +32,7 @@ userSchema.method({
   isAdmin: function () {
     // returns a promise returning a boolean indicating if the user is an admin
     return Role
-      .findOne({name: 'Admin'})
+      .findOne({ name: 'Admin' })
       .then(role => {
         if (!role) {
           console.log('Admin role does not exist!')
@@ -45,7 +45,7 @@ userSchema.method({
 
   isInRole: function (role) {
     // returns a promise returning a boolean indicating if the user has the given role
-    return Role.findOne({name: role}).then(role => {
+    return Role.findOne({ name: role }).then(role => {
       if (!role) {
         console.log(`No role such as ${role}!`)
         return false
@@ -53,6 +53,35 @@ userSchema.method({
 
       return this.roles.indexOf(role) !== -1
     })
+  },
+
+  delete: function () {
+    const Article = mongoose.model('Article')
+
+    // remove the user of the roles' records
+    let rolePromises = this.roles.map((role) => {
+      return new Promise((resolve, reject) => {
+        Role.findById(role).then(role => {
+          role.users.remove(this.id)
+          role.save().then(rl => { resolve() })
+        })
+      })
+    })
+    let articlePromises = this.articles.map((article) => {
+      return new Promise((resolve, reject) => {
+        Article.findById(article).then(article => {
+          if (!article) {
+            console.log('Article in the users articles does not exist in the DB!')
+            resolve()
+            return
+          }
+          article.remove().then(() => { resolve() })
+        })
+      })
+    })
+    rolePromises.push.apply(rolePromises, articlePromises)
+    console.log(rolePromises)
+    return rolePromises
   }
 })
 
@@ -63,7 +92,7 @@ module.exports = User
 // create an admin on server start if he doesn't exist
 module.exports.seedAdmin = () => {
   Role
-    .findOne({name: 'Admin'})
+    .findOne({ name: 'Admin' })
     .then(role => {
       if (!role) {
         console.log('The Admin role is missing, cannot seed the admin')
@@ -71,7 +100,7 @@ module.exports.seedAdmin = () => {
       }
 
       User
-        .findOne({email: 'admin'})
+        .findOne({ email: 'admin' })
         .then(admin => {
           if (!admin) {
             let adminSalt = encryption.generateSalt()
