@@ -125,10 +125,10 @@ module.exports = {
             Category.findById(article.category).then(category => {
               if (category.articles.indexOf(article.id) === -1) {
                 category.articles.push(article.id)
-                category.save().then(() => {
-                  res.redirect(`/article/details/${articleId}`)
-                })
               }
+              category.save().then(() => {
+                res.redirect(`/article/details/${articleId}`)
+              })
             })
           })
         })

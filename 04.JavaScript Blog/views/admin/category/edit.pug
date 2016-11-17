@@ -1,0 +1,17 @@
+extends ../../layout
+
+block main-content
+  .container.body-content(class='span=8 offset=2')
+    .well
+      - let editLink = '/admin/category/' + category.id + '/edit'
+      form.form-horizontal(action=editLink, method='POST')
+        fieldset
+          legend Edit Category
+          .form-group
+            label.col-sm-4.control-label(for='name') Category Name
+            .col-sm-4
+              input#name.form-control(type='text', placeholder='Category Name', name='name', value=category.name)
+          .form-group
+            .col-sm-4.col-sm-offset-4
+              a.btn.btn-default(href='/admin/category/all') Cancel
+              button.btn.btnsuccess(type='submit') Submit
