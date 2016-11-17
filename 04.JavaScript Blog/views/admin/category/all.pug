@@ -1,0 +1,25 @@
+extends ../../layout
+
+block main-content
+  .container.body-content
+    .well
+      h2
+        | All Categories -
+        a.btn.btn-warning(href='/admin/category/create') Create New
+      .row
+        table.table.table-striped.table-hover
+          thead
+            tr
+              th #
+              th Name
+              th Actions
+          tbody
+          for category in categories
+            tr
+              td= category.id
+              td= category.name
+              td
+                - let editLink = '/admin/category/' + category.id + '/edit'                
+                - let deleteLink = '/admin/category/' + category.id + '/delete'
+                a(href=editLink) Edit
+                a(href=deleteLink) Delete

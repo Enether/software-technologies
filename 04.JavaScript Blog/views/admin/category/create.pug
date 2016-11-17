@@ -1,0 +1,15 @@
+extends ../../layout
+block main-content
+  .container.body-content(class='span=8 offset=2')
+    .well
+      form.form-horizontal(action='/admin/category/create', method='POST')
+        fieldset
+          legend New Category
+          .form-group
+            label.col-sm-4.control-label(for='name') Category Name
+            .col-sm-4
+              input#name.form-control(type='text', placeholder='Category Name', name='name')
+          .form-group
+            .col-sm-4.col-sm-offset-4
+              a.btn.btn-default(href='/admin/category/all') Cancel
+              button.btn.btn-primary(type='submit') Submit
