@@ -59,11 +59,44 @@ module.exports = {
             res.render('admin/category/edit', { category: category, error: errorMsg })
           })
         } else {
-          Category.findOneAndUpdate({_id: categoryId}, {name: editArgs.name}).then(category => {
+          Category.findOneAndUpdate({ _id: categoryId }, { name: editArgs.name }).then(category => {
             res.redirect('/admin/category/all')
           })
         }
       })
     }
+  },
+
+  deleteGet: (req, res) => {
+    let categoryId = req.params.id
+
+    Category.findById(categoryId).then(category => {
+      if (!category) {
+        res.render('admin/category/all', { error: 'Category does not exist!' })
+        return
+      }
+
+      res.render('admin/category/delete', { category: category })
+    })
+  },
+
+  deletePost: (req, res) => {
+    let categoryId = req.params.id
+
+    Category.findById(categoryId).then(category => {
+      if (!category) {
+        Category.find({}).then(categories => {
+          res.render('admin/category/all', { error: 'Category does not exist!', categories: categories })
+          return
+        })
+      }
+      let articlePromises = category.delete()
+      Promise.all(articlePromises).then(() => {
+        category.remove()
+        Category.find({}).then(categories => {
+          res.render('admin/category/all', { categories: categories })
+        })
+      })
+    })
   }
 }

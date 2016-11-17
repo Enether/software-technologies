@@ -91,7 +91,7 @@ userSchema.method({
     }
   }
 })
-
+userSchema.set('versionKey', false)
 const User = mongoose.model('User', userSchema)
 
 module.exports = User

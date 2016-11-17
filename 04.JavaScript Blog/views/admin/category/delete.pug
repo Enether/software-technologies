@@ -1,0 +1,17 @@
+extends ../../layout
+
+block main-content
+  .container.body-content(class='span=8 offset=2')
+    .well
+      - let deleteLink = '/admin/category/' + category.id + '/delete'
+      form.form-horizontal(action=deleteLink, method='POST')
+        fieldset
+          legend Delete Category
+          .form-group
+            label.col-sm-4.control-label(for='name') Category Name
+            .col-sm-4
+              input#name.form-control(type='text', placeholder='Category Name', name='name', value=category.name, disabled='')
+          .form-group
+            .col-sm-4.col-sm-offset-4
+              a.btn.btn-default(href='/admin/category/all') Cancel
+              button.btn.btn-danger(type='submit') Delete
