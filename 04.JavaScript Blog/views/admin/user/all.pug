@@ -20,6 +20,9 @@ block main-content
               td= user.fullName
               td= user.email
               td
-                a(href='/admin/user/edit/{{this.id}}') Edit
-                a(href='/admin/user/delete/{{this.id}}') Delete
+                - let editRoute = '/admin/user/' + user.id + '/edit'
+                - let deleteRoute = '/admin/user/' + user.id + '/delete'
+                
+                a(href=editRoute) Edit
+                a(href=deleteRoute) Delete
             
