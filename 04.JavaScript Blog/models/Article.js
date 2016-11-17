@@ -4,18 +4,27 @@ let articleSchema = mongoose.Schema(
   {
     title: { type: String, required: true },
     content: { type: String, required: true },
-    categpry: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Category'},
+    category: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Category'},
     author: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     date: { type: Date, default: Date.now() }
   }
 )
 
 articleSchema.method({
-  insertInAuthor: function () {
+  insert: function () {
     let User = mongoose.model('User')
     User.findById(this.author).then(user => {
       user.articles.push(this.id)
       user.save()
+    })
+
+    let Category = mongoose.model('Category')
+    console.log(this.category)
+    Category.findById(this.category).then(category => {
+      if (category) {
+        category.articles.push(this.id)
+        category.save()
+      }
     })
   },
 
@@ -25,6 +34,14 @@ articleSchema.method({
       if (user) {
         user.articles.remove(this.id)
         user.save()
+      }
+    })
+
+    let Category = mongoose.model('Category')
+    Category.findById(this.category).then(category => {
+      if (category) {
+        category.articles.remove(this.id)
+        category.save()
       }
     })
   }

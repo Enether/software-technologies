@@ -1,10 +1,12 @@
 const mongoose = require('mongoose')
 const Article = mongoose.model('Article')
-const User = mongoose.model('User')
+const Category = mongoose.model('Category')
 
 module.exports = {
   createGet: (req, res) => {
-    res.render('article/create')
+    Category.find({}).then(categories => {
+      res.render('article/create', {categories: categories})
+    })
   },
 
   createPost: (req, res) => {
@@ -24,7 +26,7 @@ module.exports = {
       .then((article) => {
         console.log('User ' + req.user.fullName + ' with e-mail ' + req.user.email + ' created an article named ' + article.title)
         // add the article to the user's articles
-        article.insertInAuthor()
+        article.insert()
         res.redirect('/')
       })
   },
