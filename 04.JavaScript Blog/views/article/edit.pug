@@ -16,6 +16,12 @@ block main-content
               .col-sm-6
                 textarea#postContent.form-control(rows='5' name='content')= article.content
             .form-group
+              label.col-sm-4.control-label(for='category') Category
+              .col-sm-6
+                select#select.form-control(name='category')
+                  for category in categories
+                    option(value=category.id)= category.name
+            .form-group
               .col-sm-4.col-sm-offset-4
                 button.btn.btn-default(type='reset') Cancel
                 input.btn.btn-info(type='submit' value='Edit')

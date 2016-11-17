@@ -5,7 +5,7 @@ const Category = mongoose.model('Category')
 module.exports = {
   createGet: (req, res) => {
     Category.find({}).then(categories => {
-      res.render('article/create', {categories: categories})
+      res.render('article/create', { categories: categories })
     })
   },
 
@@ -70,8 +70,9 @@ module.exports = {
             res.redirect('/')
             return
           }
-
-          res.render('article/edit', { article: article })
+          Category.find({}).then(categories => {
+            res.render('article/edit', { article: article, categories: categories })
+          })
         })
       })
   },
@@ -88,7 +89,7 @@ module.exports = {
 
     let editedTitle = req.body.title
     let editedContent = req.body.content
-
+    let editedCategory = req.body.category
     let errorMsg = ''
     if (!editedTitle) {
       errorMsg = 'Title must not be empty!'
@@ -102,19 +103,34 @@ module.exports = {
     }
     Article
       .findById(articleId)
+      .populate('category')
       .then(article => {
         if (!(req.user.isAuthor(article) || req.user.isAdmin())) {
           res.redirect('/')
           return
         }
-        article.title = editedTitle
-        article.content = editedContent
-        article.save().then((err, article) => {
-          if (!err) {
-            res.render('article/edit', { error: err.message })
-            return
-          }
-          res.redirect(`/article/details/${articleId}`)
+        if (article.category.id !== editedCategory) {
+          article.category.articles.remove(article.id)
+        }
+        article.category.save().then(() => {
+          article.title = editedTitle
+          article.content = editedContent
+          article.category = editedCategory
+          article.save().then((err) => {
+            if (!err) {
+              res.render('article/edit', { error: err.message })
+              return
+            }
+
+            Category.findById(article.category).then(category => {
+              if (category.articles.indexOf(article.id) === -1) {
+                category.articles.push(article.id)
+                category.save().then(() => {
+                  res.redirect(`/article/details/${articleId}`)
+                })
+              }
+            })
+          })
         })
       })
   },
@@ -130,6 +146,7 @@ module.exports = {
 
     Article
       .findById(articleId)
+      .populate('category')
       .then((article) => {
         if (!article) {
           res.render('article/delete', { error: `Article with ID ${articleId} does not exist!`, article: {} })

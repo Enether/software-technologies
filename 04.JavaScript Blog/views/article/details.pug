@@ -12,8 +12,8 @@ block main-content
           footer
             .pull-right
             if (user && (user.isAdmin() || user.isAuthor(article)))
-              - let editLink = '/article/edit/' + id
-              - let deleteLink = '/article/delete/' + id
+              - let editLink = '/article/edit/' + article.id
+              - let deleteLink = '/article/delete/' + article.id
                 a.btn.btn-success.btn-xs(href=editLink) Edit »
                 a.btn.btn-danger.btn-xs(href=deleteLink) Delete »
               a.btn.btn-default.btn-xs(href='/') Back »
