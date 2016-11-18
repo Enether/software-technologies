@@ -93,8 +93,10 @@ articleSchema.method({
   },
 
   deleteTag: function (tagId) {
-    this.tags.remove(tagId)
-    this.save()
+    return new Promise((resolve, reject) => {
+      this.tags.remove(tagId)
+      this.save().then(() => { resolve() })
+    })
   }
 })
 

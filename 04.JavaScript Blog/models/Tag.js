@@ -24,7 +24,7 @@ tagSchema.method({
 
     return articlePromises
   },
-  // remove the tag from an article
+  // remove the article from this tag
   deleteArticle: function (articleId) {
     return new Promise((resolve, reject) => {
       this.articles.remove(articleId)

@@ -70,6 +70,7 @@ module.exports = {
 
     Article
       .findById(articleId)
+      .populate('tags')
       .then((article) => {
         req.user.isAdmin().then(isAdmin => {
           if (!article || !(req.user.isAuthor(article) || isAdmin)) {
@@ -77,7 +78,8 @@ module.exports = {
             return
           }
           Category.find({}).then(categories => {
-            res.render('article/edit', { article: article, categories: categories })
+            let tagsWithNames = article.tags.map(tag => { return tag.name })
+            res.render('article/edit', { article: article, categories: categories, tags: tagsWithNames.join(', ') })
           })
         })
       })
@@ -96,6 +98,7 @@ module.exports = {
     let editedTitle = req.body.title
     let editedContent = req.body.content
     let editedCategory = req.body.category
+
     let errorMsg = ''
     if (!editedTitle) {
       errorMsg = 'Title must not be empty!'
@@ -109,31 +112,51 @@ module.exports = {
     }
     Article
       .findById(articleId)
-      .populate('category')
+      .populate(['category', 'tags'])
       .then(article => {
         if (!(req.user.isAuthor(article) || req.user.isAdmin())) {
           res.redirect('/')
           return
         }
-        if (article.category.id !== editedCategory) {
-          article.category.articles.remove(article.id)
+        // new tags
+        let editedTags = req.body.tags.split(/\s+|,/).filter(tag => { return tag })
+        // old tags which are not in the editedTags, therefore should be removed
+        let oldTags = article.tags.filter(tag => {
+          return editedTags.indexOf(tag.name === -1)
+        })
+        // TODO: move to a function
+        let promises = []
+        for (let tag of oldTags) {
+          let removeFromTagPromise = tag.deleteArticle()
+          let removeFromArticlePromise = article.deleteTag(tag.id)
+          promises.push(removeFromTagPromise)
+          promises.push(removeFromArticlePromise)
         }
-        article.category.save().then(() => {
-          article.title = editedTitle
-          article.content = editedContent
-          article.category = editedCategory
-          article.save().then((err) => {
-            if (!err) {
-              res.render('article/edit', { error: err.message })
-              return
+        Promise.all(promises).then(() => {
+          let initializedTagsPromise = [initializeTags(editedTags, article.id)]
+          Promise.all(initializedTagsPromise).then(() => {
+            if (article.category.id !== editedCategory) {
+              article.category.articles.remove(article.id)
             }
+            article.category.save().then(() => {
+              article.title = editedTitle
+              article.content = editedContent
+              article.category = editedCategory
 
-            Category.findById(article.category).then(category => {
-              if (category.articles.indexOf(article.id) === -1) {
-                category.articles.push(article.id)
-              }
-              category.save().then(() => {
-                res.redirect(`/article/details/${articleId}`)
+              article.save().then((err) => {
+                if (!err) {
+                  res.render('article/edit', { error: err.message })
+                  return
+                }
+
+                Category.findById(article.category).then(category => {
+                  if (category.articles.indexOf(article.id) === -1) {
+                    category.articles.push(article.id)
+                  }
+                  category.save().then(() => {
+                    res.redirect(`/article/details/${articleId}`)
+                  })
+                })
               })
             })
           })
