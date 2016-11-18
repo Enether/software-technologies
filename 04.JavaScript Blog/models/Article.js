@@ -39,21 +39,6 @@ articleSchema.method({
 
     promises.push(categoryPromise)
 
-    let Tag = mongoose.model('Tag')
-    console.log(this.tags)
-    let tagPromises = this.tags.map((tagId) => {
-      return new Promise((resolve, reject) => {
-        Tag.findById(tagId).then(tag => {
-          tag.articles.push(this.id)
-          tag.save().then(() => {
-            resolve()
-          })
-        })
-      })
-    })
-
-    promises.push.apply(promises, tagPromises)
-
     return promises
   },
 
