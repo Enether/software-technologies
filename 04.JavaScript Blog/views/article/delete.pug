@@ -20,7 +20,10 @@ block main-content
               .col-sm-6
                 select#select.form-control(name='category', disabled='')
                   option(value=article.category.id)= article.category.name
-
+            .form-group
+              label.col-sm-4.control-label(for='article_tags') Tags
+              .col-sm-4
+                input#article_tags.form-control(type='text', name='tags', value=tags, disabled)
             .form-group
               .col-sm-4.col-sm-offset-4
                 button.btn.btn-default(type='reset') Cancel

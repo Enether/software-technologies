@@ -175,7 +175,7 @@ module.exports = {
 
     Article
       .findById(articleId)
-      .populate('category')
+      .populate(['category', 'tags'])
       .then((article) => {
         if (!article) {
           res.render('article/delete', { error: `Article with ID ${articleId} does not exist!`, article: {} })
@@ -185,8 +185,8 @@ module.exports = {
           res.redirect('/')
           return
         }
-
-        res.render('article/delete', { article: article })
+        let tags = article.tags.map(tag => { return tag.name })
+        res.render('article/delete', { article: article, tags: tags })
       })
   },
 
