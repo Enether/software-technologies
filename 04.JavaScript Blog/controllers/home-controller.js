@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const Article = mongoose.model('Article')
 const Category = mongoose.model('Category')
 const User = mongoose.model('User')
 

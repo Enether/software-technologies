@@ -20,6 +20,8 @@ module.exports = (app) => {
 
   app.get('/article/delete/:id', controllers.article.deleteGet)
   app.post('/article/delete/:id', controllers.article.deletePost)
+
+  app.get('/tag/:tag', controllers.tag.showArticles)
   // EVERYTHING BELOW REQUIRES AUTH
   // admin authentication middleware
   app.use((req, res, next) => {

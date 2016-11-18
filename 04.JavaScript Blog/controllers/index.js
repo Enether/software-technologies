@@ -14,11 +14,13 @@ const userController = require('./user-controller')
 const homeController = require('./home-controller')
 const articleController = require('./article-controller')
 const adminController = require('./admin')
+const tagController = require('./tag-controller')
 
 module.exports = {
   user: userController,
   home: homeController,
   article: articleController,
-  admin: adminController
+  admin: adminController,
+  tag: tagController
 }
 

@@ -1,0 +1,22 @@
+extends ../layout
+
+block main-content
+  .container.body-content
+    h1 Searching by tag - #{tag.name}
+    .row
+      for article in tag.articles
+        .col-md-6
+          header
+            h2= article.title
+          p= article.content
+          p
+          for tag in article.tags
+            - let tagLink = '/tag/' + tag.name
+            a.btn.btn-default.btn-xs(href=tagLink)= tag.name
+          small.author=article.author.fullName
+          footer
+            .pull-right
+              - let articleDetailsLink = '/article/details/' + article.id
+              a.btn.btn-default.btn-xs(href=articleDetailsLink)
+                | Read
+                | more »
