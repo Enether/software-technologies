@@ -47,7 +47,7 @@ module.exports = {
 
     Article
       .findOne({ _id: articleId })
-      .populate('author')
+      .populate(['author', 'tags'])
       .then((article) => {
         if (!article) {
           res.redirect('/')

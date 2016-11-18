@@ -10,10 +10,14 @@ block main-content
           p= article.content
           small.author= article.author.fullName
           footer
+            .pull-left
+              for tag in article.tags
+                - let tagLink = '/tag/' + tag.name
+                a.btn.btn-default.btn-xs(href=tagLink)= tag.name
             .pull-right
-            if (user && (user.isAdmin() || user.isAuthor(article)))
-              - let editLink = '/article/edit/' + article.id
-              - let deleteLink = '/article/delete/' + article.id
-                a.btn.btn-success.btn-xs(href=editLink) Edit »
-                a.btn.btn-danger.btn-xs(href=deleteLink) Delete »
-              a.btn.btn-default.btn-xs(href='/') Back »
+              if (user && (user.isAdmin() || user.isAuthor(article)))
+                - let editLink = '/article/edit/' + article.id
+                - let deleteLink = '/article/delete/' + article.id
+                  a.btn.btn-success.btn-xs(href=editLink) Edit »
+                  a.btn.btn-danger.btn-xs(href=deleteLink) Delete »
+                a.btn.btn-default.btn-xs(href='/') Back »
