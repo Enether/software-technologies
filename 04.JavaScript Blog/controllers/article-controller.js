@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const Article = mongoose.model('Article')
 const Category = mongoose.model('Category')
+// function for creating non-existing tags and adding the article to the tag's list
+const initializeTags = require('./../models/Tag').initializeTag
 
 module.exports = {
   createGet: (req, res) => {
@@ -23,10 +25,13 @@ module.exports = {
 
     Article
       .create(article)
-      .then((article) => {
-        console.log('User ' + req.user.fullName + ' with e-mail ' + req.user.email + ' created an article named ' + article.title)
+      .then((newArticle) => {
+        console.log('User ' + req.user.fullName + ' with e-mail ' + req.user.email + ' created an article named ' + newArticle.title)
         // add the article to the user's articles
-        Promise.all(article.insert()).then(() => {
+        let tagNames = article.tagNames.split(/\s+|,/).filter(tag => { return tag })
+        let tagPromise = initializeTags(tagNames, newArticle.id)
+        let articlePromise = newArticle.insert()
+        Promise.all([tagPromise, articlePromise]).then(() => {
           res.redirect('/')
         })
       })

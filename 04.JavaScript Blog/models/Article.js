@@ -40,6 +40,7 @@ articleSchema.method({
     promises.push(categoryPromise)
 
     let Tag = mongoose.model('Tag')
+    console.log(this.tags)
     let tagPromises = this.tags.map((tagId) => {
       return new Promise((resolve, reject) => {
         Tag.findById(tagId).then(tag => {
@@ -104,6 +105,11 @@ articleSchema.method({
     promises.push.apply(promises, tagPromises)
 
     return promises
+  },
+
+  deleteTag: function (tagId) {
+    this.tags.remove(tagId)
+    this.save()
   }
 })
 
