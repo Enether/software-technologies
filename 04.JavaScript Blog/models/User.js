@@ -70,10 +70,11 @@ userSchema.method({
     let articlePromises = this.articles.map((article) => {
       return new Promise((resolve, reject) => {
         Article.findById(article).then(article => {
-          // TODO: Update with promise after we add tags/categories
-          //article.delete() unneeded for now
-          article.remove()
-          resolve()
+          let articlePromises = article.delete()
+          Promise.all(articlePromises).then(() => {
+            article.remove()
+            resolve()
+          })
         })
       })
     })

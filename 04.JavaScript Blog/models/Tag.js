@@ -11,7 +11,7 @@ tagSchema.method({
 
     let articlePromises = this.articles.map((articleId) => {
       return new Promise((resolve, reject) => {
-        Article.findById(article).then(article => {
+        Article.findById(articleId).then(article => {
           if (article.tags.indexOf(this.id) === -1) {
             article.tags.push(this.id)
             article.save().then(() => {
@@ -49,6 +49,8 @@ tagSchema.method({
         })
       })
     })
+
+    return articlePromises
   }
 })
 

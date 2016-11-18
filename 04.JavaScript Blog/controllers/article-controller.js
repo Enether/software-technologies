@@ -26,8 +26,9 @@ module.exports = {
       .then((article) => {
         console.log('User ' + req.user.fullName + ' with e-mail ' + req.user.email + ' created an article named ' + article.title)
         // add the article to the user's articles
-        article.insert()
-        res.redirect('/')
+        Promise.all(article.insert()).then(() => {
+          res.redirect('/')
+        })
       })
   },
 
@@ -182,10 +183,12 @@ module.exports = {
           res.render('article/delete', { error: `The author of article with id ${articleIndex} does not seem to have it in his articles collection.` })
           return
         }
-        // TODO: Use promises once we add more things to article
-        article.delete()
-        article.remove()
-        res.redirect('/')
+
+        let promises = article.delete()
+        Promise.all(promises).then(() => {
+          article.remove()
+          res.redirect('/')
+        })
       })
   }
 }
