@@ -127,7 +127,7 @@ module.exports = {
         // TODO: move to a function
         let promises = []
         for (let tag of oldTags) {
-          let removeFromTagPromise = tag.deleteArticle()
+          let removeFromTagPromise = tag.deleteArticle(article.id)
           let removeFromArticlePromise = article.deleteTag(tag.id)
           promises.push(removeFromTagPromise)
           promises.push(removeFromArticlePromise)
