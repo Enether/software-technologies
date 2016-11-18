@@ -9,6 +9,10 @@ block main-content
             header
               h2= article.title
             p= article.content
+            p
+              for tag in article.tags
+                - let tagLink = '/tag/' + tag.name
+                a.btn.btn-default.btn-xs(href=tagLink)= tag.name
             small.author= article.author.fullName
             footer
               .pull-right
