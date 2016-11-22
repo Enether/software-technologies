@@ -7,4 +7,5 @@ import softuniBlog.entity.Article;
  * Created by Netherblood on 11/22/2016.
  */
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
+
 }
