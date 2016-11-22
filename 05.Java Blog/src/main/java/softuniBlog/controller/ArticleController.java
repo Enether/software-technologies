@@ -91,4 +91,30 @@ public class ArticleController {
 
         return "redirect:/article/" + article.getId();
     }
+
+    @GetMapping("/article/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String delete(@PathVariable Integer id, Model model) {
+        if (!this.articleRepository.exists(id)) {
+            return "redirect:/";
+        }
+
+        Article article = articleRepository.findOne(id);
+
+        model.addAttribute("article", article);
+        model.addAttribute("view", "article/delete");
+
+        return "base-layout";
+    }
+
+    @PostMapping("/article/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String deleteProcess(@PathVariable Integer id) {
+        if (!this.articleRepository.exists(id)) {
+            return "redirect:/";
+        }
+
+        this.articleRepository.delete(this.articleRepository.findOne(id));
+        return "redirect:/";
+    }
 }
