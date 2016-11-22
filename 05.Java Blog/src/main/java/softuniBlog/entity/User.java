@@ -71,4 +71,8 @@ public class User {
     }
 
     public User(){}  // BECAUSE JAVA
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
 }
