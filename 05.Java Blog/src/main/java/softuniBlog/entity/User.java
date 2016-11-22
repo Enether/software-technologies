@@ -10,6 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User {
+    private Set<Article> articles;
     private Set<Role> roles;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="users_roles")
@@ -63,11 +64,22 @@ public class User {
         this.id = id;
     }
 
+    @OneToMany(mappedBy = "author")
+    public Set<Article> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(Set<Article> articles) {
+        this.articles = articles;
+    }
+
     public User(String email, String fullName, String password) {
         this.email = email;
         this.fullName = fullName;
         this.password = password;
         this.roles = new HashSet<>();
+
+        this.articles = new HashSet<>();
     }
 
     public User(){}  // BECAUSE JAVA
