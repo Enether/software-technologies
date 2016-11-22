@@ -28,7 +28,7 @@ public class BlogUserDetails extends User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return this.user.getEmail();
     }
 
     @Override
