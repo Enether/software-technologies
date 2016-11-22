@@ -4,6 +4,7 @@ import org.springframework.data.annotation.*;
 
 import javax.persistence.*;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 /**
  * Created by Netherblood on 11/22/2016.
@@ -61,8 +62,10 @@ public class Article {
 
     public Article() { }  // BECAUSE JAVA :)
 
-    @org.springframework.data.annotation.Transient
+    @Transient
     public String getSummary() {
         return this.getContent().substring(0, this.getContent().length() / 2) + "...";
     }
+
+
 }
