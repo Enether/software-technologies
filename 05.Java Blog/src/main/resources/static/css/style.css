@@ -14,7 +14,7 @@
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 
 body {
-    padding-top: 70px;
+    padding-top: 0;
     padding-bottom: 20px;
 }
 
