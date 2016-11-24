@@ -1,6 +1,10 @@
 package softuniBlog.entity;
 
+import org.springframework.data.annotation.*;
+
 import javax.persistence.*;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -86,5 +90,16 @@ public class User {
 
     public void addRole(Role role) {
         this.roles.add(role);
+    }
+
+    @Transient
+    public boolean isAdmin() {
+        return this.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+    }
+
+    @Transient
+    public boolean isAuthor(Article givenArticle) {
+        // MIGHT NOT WORK
+        return this.getId().equals(givenArticle.getAuthor().getId());
     }
 }
