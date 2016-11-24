@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import softuniBlog.bindingModel.UserEditBindingModel;
+import softuniBlog.entity.Article;
 import softuniBlog.entity.Role;
 import softuniBlog.entity.User;
 import softuniBlog.repository.ArticleRepository;
@@ -88,6 +89,37 @@ public class AdminUserController {
         user.setRoles(roles);
         // save the user
         this.userRepository.saveAndFlush(user);
+
+        return "redirect:/admin/users/";
+    }
+
+    @GetMapping("/delete/{id")
+    public String delete(@PathVariable Integer id, Model model) {
+        if (!this.userRepository.exists(id)) {
+            return "redirect:/admin/users/";
+        }
+
+        User user = this.userRepository.findOne(id);
+
+        model.addAttribute("user", user);
+        model.addAttribute("view", "admin/user/delete");
+
+        return "base-layout";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteProcess(@PathVariable Integer id) {
+        if (!this.userRepository.exists(id)) {
+            return "redirect:/admin/users/";
+        }
+
+        User user = this.userRepository.findOne(id);
+        // delete the user's articles
+        for (Article article : user.getArticles()) {
+            this.articleRepository.delete(article);
+        }
+
+        this.userRepository.delete(user);
 
         return "redirect:/admin/users/";
     }
